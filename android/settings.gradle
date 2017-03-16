@@ -1,0 +1,3 @@
+rootProject.name = 'groupieCLIENT'
+
+include ':app'
