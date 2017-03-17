@@ -12,12 +12,32 @@ import Signup from './app/components/signup/Signup'
 export default class groupieCLIENT extends Component {
 
 
+  renderScene(route, navigator) {
+    if (route.name == 'splash'){
+      console.log(route.name)
+      return <Splash navigator={navigator} />
+    }
+    if (route.name == 'signup'){
+      return <Signup navigator={navigator} />
+    }
+    if (route.name == 'login'){
+      console.log(route.name)
+      return <Login navigator={navigator} />
+    }
+    if (route.name == 'home'){
+      return <Home navigator={navigator} />
+    }
+  }
+
 
   render() {
     return (
-    <Splash>
-
-    </Splash>
+    <ViewContainer>
+      <Navigator
+        initialRoute={{name: 'splash'}}
+        renderScene={this.renderScene.bind(this)}
+        />
+    </ViewContainer>
     );
   }
 }

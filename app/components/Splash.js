@@ -8,6 +8,7 @@ import {
   Button,
   Image,
   Alert,
+  TouchableHighlight,
   View
 } from 'react-native';
 
@@ -22,6 +23,13 @@ const signupPress = () => {
 }
 
 class Splash extends Component {
+
+  navigate(routeName) {
+      this.props.navigator.push({
+        name: routeName
+      })
+  }
+
   render() {
     return (
       <ViewContainer>
@@ -32,30 +40,15 @@ class Splash extends Component {
           <Image style={styles.image}
             source={require("../../assets/GroupieLogo.png")}
           />
-        <View style={{backgroundColor: 'aliceblue', marginBottom: 5, marginLeft: 20, marginRight: 20}}>
-          <Button
-            color='#000000'
-            style={styles.button}
-            onPress={loginPress}
-            title="Log In"
-          />
-        </View>
-        <View style={{backgroundColor: 'aliceblue', marginBottom: 5, marginLeft: 20, marginRight: 20}}>
-          <Button
-            color='#000'
-            style={styles.button}
-            onPress={signupPress}
-            title="Sign Up"
-          />
-        </View>
-        <View style={{backgroundColor: 'aliceblue', marginBottom: 5, marginLeft: 20, marginRight: 20}}>
-          <Button
-            color='#000'
-            style={styles.button}
-            onPress={signupPress}
-            title="Just Browsing..."
-          />
-        </View>
+        <TouchableHighlight onPress={this.navigate.bind(this, 'login')} style={styles.button}>
+          <Text>Login</Text>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={this.navigate.bind(this, 'signup')} style={styles.button}>
+          <Text>Sign Up</Text>
+        </TouchableHighlight>
+        <TouchableHighlight style={styles.button}>
+          <Text>Just Browsing...</Text>
+        </TouchableHighlight>
 
       </ViewContainer>
     )
@@ -76,8 +69,13 @@ const styles = StyleSheet.create({
     resizeMode: 'contain'
   },
   button: {
-    color:"#FFFFFF",
-    backgroundColor:"#000"
+  height: 50,
+  backgroundColor: 'aliceblue',
+  alignItems: 'center',
+  marginLeft: 40,
+  marginRight: 40,
+  marginBottom: 10,
+  justifyContent: 'center'
   }
 })
 
