@@ -15,9 +15,9 @@ export default class groupieCLIENT extends Component {
 
   render() {
     return (
-    <Signup>
+    <Splash>
 
-    </Signup>
+    </Splash>
     );
   }
 }
