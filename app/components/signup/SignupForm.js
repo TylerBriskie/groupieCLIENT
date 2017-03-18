@@ -105,36 +105,7 @@ class SignupForm extends Component {
           <Errors errors={this.state.errors} />
 
       </View>
-      // <View style={styles.container}>
-      //   <StatusBar
-      //     barStyle = "light-content"
-      //     />
-      //   <TextInput
-      //     placeholder="username or email"
-      //     returnKeyType="next"
-      //     keyboardType = 'email-address'
-      //     autoCapitalize= 'none'
-      //     autoCorrect={false}
-      //     onSubmitEditing={()=> this.passwordInput.focus()}
-      //     style={styles.input}
-      //   />
-      //   <TextInput
-      //     placeholder="password"
-      //     secureTextEntry
-      //     returnKeyType="next"
-      //     onSubmitEditing={()=> this.passwordInput.focus()}
-      //     style={styles.input}
-      //   />
-      //   <TextInput
-      //     placeholder="re-enter password"
-      //     secureTextEntry
-      //     returnKeyType="go"
-      //     ref={(input)=> this.passwordInput = input}
-      //     style={styles.input}
-      //   />
 
-      //
-      // </View>
     );
   }
 }

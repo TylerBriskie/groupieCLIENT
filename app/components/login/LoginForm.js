@@ -20,7 +20,6 @@ class LoginForm extends Component {
     try {
       await AsyncStorage.setItem(ACCESS_TOKEN, accessToken);
       this.getToken();
-      console.log(accessToken)
     } catch(error) {
       console.log("Error: " + error)
     }
@@ -29,6 +28,7 @@ class LoginForm extends Component {
   async getToken(){
     try {
       let token = await AsyncStorage.getItem(ACCESS_TOKEN);
+      console.log("Token Is: ", token);
     } catch(error) {
       console.log("Error: " + error)
     }
@@ -59,14 +59,14 @@ class LoginForm extends Component {
 
         })
       });
-      let res = await response.text();
 
+      let res = await response.text();
+        console.log(res);
       if (response.status >= 200 && response.status < 300){
 
           this.setState({error: ''});
           let accessToken = res;
           this.storeToken(accessToken)
-          console.log("res token: ", accessToken)
       } else {
         let error = res;
         throw error;
@@ -75,6 +75,10 @@ class LoginForm extends Component {
       console.log("Error: " + error)
       this.setState({errors: error});
     }
+  }
+
+  logToken(){
+    console.log(AsyncStorage)
   }
 
   render(){
@@ -104,6 +108,13 @@ class LoginForm extends Component {
       <TouchableOpacity style={styles.buttonContainer} onPress={this.onLoginPressed.bind(this)}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonContainer} onPress={this.getToken.bind(this)}>
+            <Text style={styles.buttonText}>Access Token?</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.buttonContainer} onPress={this.removeToken.bind(this)}>
+              <Text style={styles.buttonText}>Remove Token</Text>
+            </TouchableOpacity>
+
 
       </View>
     );

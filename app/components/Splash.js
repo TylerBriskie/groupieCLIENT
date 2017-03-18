@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
+  AsyncStorage,
   StatusBar,
   Button,
   Image,
@@ -46,7 +47,7 @@ class Splash extends Component {
         <TouchableHighlight onPress={this.navigate.bind(this, 'signup')} style={styles.button}>
           <Text>Sign Up</Text>
         </TouchableHighlight>
-        <TouchableHighlight style={styles.button}>
+        <TouchableHighlight onPress={this.navigate.bind(this, 'myProfile')} style={styles.button}>
           <Text>Just Browsing...</Text>
         </TouchableHighlight>
 

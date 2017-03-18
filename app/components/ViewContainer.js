@@ -8,7 +8,7 @@ import {
   View
 } from 'react-native';
 
-const MyProfile = require('./MyProfile');
+const MyProfile = require('./profile/MyProfile');
 
 class ViewContainer extends Component {
   render() {
