@@ -66,7 +66,7 @@ class Browse extends Component {
             thumbnail: "../../../assets/EVH.jpg",
             match_username: res.username,
             match_content: res.content,
-            match_bio: "",
+            match_bio: res.bio,
             match_age: res.age,
             match_genres: res.genres,
           });
@@ -99,8 +99,15 @@ class Browse extends Component {
             marginVertical: 10
           }}
         />
+      <View style={styles.row}>
         <Text style={styles.h2}>{this.state.match_username}</Text>
+        <Text style={styles.h2}>{this.state.match_age}</Text>
+      </View>
+      <View style={styles.row}>
         <Text style={styles.h2}>{this.state.match_genres}</Text>
+
+      </View>
+        <Text style={styles.p}>{this.state.match_bio}</Text>
 
       </View>
       <View style={styles.bottom}>
@@ -125,13 +132,14 @@ class Browse extends Component {
 const styles = StyleSheet.create({
   browse: {
     flex: 1,
-    alignItems:'flex-start',
-    justifyContent: 'flex-start'
+    alignItems:'stretch',
+    justifyContent: 'flex-start',
+    marginHorizontal: 10
   },
   row: {
-    flex: 1,
     flexDirection: "row",
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    marginBottom: 15
   },
   bottom:{
     marginBottom: 10,
@@ -154,17 +162,16 @@ const styles = StyleSheet.create({
   },
   h2: {
     fontSize: 22,
-    color:'yellow'
+    color:'white'
+  },
+  p: {
+    fontSize: 16,
+    color:'white'
   },
   buttonText: {
     textAlign: 'center',
     color: '#FFF',
     fontWeight: '700'
-  },
-  logo:{
-    width:170,
-    height: 170,
-    resizeMode: 'contain'
   }
 });
 

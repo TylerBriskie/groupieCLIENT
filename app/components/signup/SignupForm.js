@@ -18,7 +18,6 @@ class SignupForm extends Component {
       email: "",
       password: "",
       password_confirm: "",
-      age: 18,
       errors: [],
     }
   }
