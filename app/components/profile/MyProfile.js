@@ -16,15 +16,16 @@ import ProfileForm from './ProfileForm';
 
 class MyProfile extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       username: "",
       password: "",
       genres: [],
       avatar_url: "",
-      error: []
+      error: [],
+      accessToken: this.props.accessToken
     }
   }
 

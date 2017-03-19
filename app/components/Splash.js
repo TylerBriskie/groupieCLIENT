@@ -47,7 +47,7 @@ class Splash extends Component {
         <TouchableHighlight onPress={this.navigate.bind(this, 'signup')} style={styles.button}>
           <Text>Sign Up</Text>
         </TouchableHighlight>
-        <TouchableHighlight onPress={this.navigate.bind(this, 'myProfile')} style={styles.button}>
+        <TouchableHighlight onPress={this.navigate.bind(this, 'browse')} style={styles.button}>
           <Text>Just Browsing...</Text>
         </TouchableHighlight>
 

@@ -9,6 +9,8 @@ import Splash from './app/components/Splash'
 import Signup from './app/components/signup/Signup'
 import MyProfile from './app/components/profile/MyProfile'
 import ProfileForm from './app/components/profile/ProfileForm'
+import Browse from './app/components/Browse'
+
 
 export default class groupieCLIENT extends Component {
 
@@ -28,8 +30,7 @@ export default class groupieCLIENT extends Component {
       return <Browse navigator={navigator} />
     }
     if (route.name == 'myProfile'){
-      console.log(route.name, 'loggin my profile')
-      return <MyProfile navigator={navigator} />
+      return <MyProfile navigator={navigator} {...route.passProps} />
     }
   }
 

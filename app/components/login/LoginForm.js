@@ -16,6 +16,16 @@ class LoginForm extends Component {
     }
   }
 
+  redirect(routeName, token){
+    this.props.navigator.push({
+      name: routeName,
+      passProps: {
+        accessToken: token
+      }
+    })
+  }
+
+
   async storeToken(accessToken){
     try {
       await AsyncStorage.setItem(ACCESS_TOKEN, accessToken);
@@ -67,6 +77,7 @@ class LoginForm extends Component {
           this.setState({error: ''});
           let accessToken = res;
           this.storeToken(accessToken)
+          this.redirect('MyProfile', accessToken)
       } else {
         let error = res;
         throw error;

@@ -29,34 +29,14 @@ class Browse extends Component {
     }
   }
 
-  async onLoginPressed(){
-    try {
-      let response = await fetch('http://localhost:3000/users/random', {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        }
-
-      });
-
-      if (response.status >= 200 && response.status < 300){
-
-        console.log(response)
-      } else {
-        let error = res;
-        throw error;
-      }
-    } catch(error) {
-      console.log("Error: " + error)
-      this.setState({errors: error});
-    }
+  navigateBack(){
+    this.props.navigator.pop();
   }
 
   render(){
-    <ViewContainer>
-
-    </ViewContainer>
+    <View>
+      <Text>Just Browsing...</Text>
+    </View>
   }
 }
 
