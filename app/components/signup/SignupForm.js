@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { StyleSheet, View,
+import { StyleSheet, View, Navigator,
   TextInput, Text, StatusBar,
-  KeyboardAvoidingView, PickerIOS,
-  TouchableOpacity, TouchableHighlight} from 'react-native';
+  KeyboardAvoidingView, TouchableHighlight} from 'react-native';
 
 const USER_AGE = [];
 for (var i = 18; i < 100; i++) {
@@ -18,11 +17,23 @@ class SignupForm extends Component {
       email: "",
       password: "",
       password_confirm: "",
+      age: 18,
       errors: [],
     }
   }
 
+  navigate(routeName) {
+      this.props.navigator.push({
+        name: routeName
+      })
+  }
+
+  navigateBack(){
+    this.props.navigator.pop();
+  }
+
   async onRegisterPressed(){
+    console.log("pressed register")
     try {
       let response = await fetch('http://localhost:3000/signup', {
         method: 'POST',
@@ -40,9 +51,10 @@ class SignupForm extends Component {
         })
       });
       let res = await response.text();
-
+      console.log(response)
       if (response.status >= 200 && response.status < 300){
           console.log("res is: ", res)
+          navigate('myProfile')
       } else {
         let errors = res;
         throw errors;

@@ -7,6 +7,7 @@ import {
   StatusBar,
   Button,
   Image,
+  TextInput,
   Alert,
   TouchableHighlight,
   View
@@ -20,6 +21,7 @@ class ProfileForm extends Component {
 
     this.state = {
       username: "",
+      user_id: "",
       password: "",
       genres: [],
       avatar_url: "",
@@ -37,11 +39,12 @@ class ProfileForm extends Component {
     this.props.navigator.pop();
   }
 
-
   render() {
     return (
       <View style={styles.container}>
-          <Text style={styles.h3}>{this.state.username}</Text>
+          <Text style={styles.h3}>Hello from ProfileForm.js</Text>
+          <Text style={styles.h3}>My Username: {this.state.username}</Text>
+          <Text style={styles.h3}>My Genres: {this.state.genres}</Text>
       </View>
     )
   }

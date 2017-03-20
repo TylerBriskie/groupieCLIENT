@@ -30,8 +30,11 @@ export default class groupieCLIENT extends Component {
     if (route.name == 'browse'){
       return <Browse navigator={navigator} />
     }
-    if (route.name == 'myProfile'){
-      return <MyProfile navigator={navigator} {...route.passProps} />
+    if (route.name == 'myprofile'){
+      return <MyProfile navigator={navigator} />
+    }
+    if (route.name == 'loginform'){
+      return <LoginForm navigator={navigator} />
     }
   }
 

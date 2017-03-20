@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import { StyleSheet, AsyncStorage, View, TextInput, Text, StatusBar, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Navigator, AsyncStorage, View, TextInput, Text, StatusBar, KeyboardAvoidingView, TouchableHighlight, TouchableOpacity } from 'react-native';
 
 const ACCESS_TOKEN = 'access_token';
+const USER_ID = 'user_id';
 
 
 class LoginForm extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       email: "",
@@ -25,6 +26,11 @@ class LoginForm extends Component {
     })
   }
 
+  navigate(routeName) {
+      this.props.navigator.push({
+        name: routeName
+      })
+  }
 
   async storeToken(accessToken){
     try {
@@ -71,13 +77,13 @@ class LoginForm extends Component {
       });
 
       let res = await response.text();
-        console.log(res);
       if (response.status >= 200 && response.status < 300){
 
           this.setState({error: ''});
           let accessToken = res;
           this.storeToken(accessToken)
-          this.redirect('MyProfile', accessToken)
+          console.log("Logging dat token:",  accessToken);
+          this.navigate('myprofile');
       } else {
         let error = res;
         throw error;
@@ -116,15 +122,18 @@ class LoginForm extends Component {
           ref={(input)=> this.passwordInput = input}
           style={styles.input}
         />
-      <TouchableOpacity style={styles.buttonContainer} onPress={this.onLoginPressed.bind(this)}>
+      <TouchableHighlight style={styles.buttonContainer} onPress={this.onLoginPressed.bind(this)}>
           <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonContainer} onPress={this.getToken.bind(this)}>
+        </TouchableHighlight>
+        <TouchableHighlight style={styles.buttonContainer} onPress={this.getToken.bind(this)}>
             <Text style={styles.buttonText}>Access Token?</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.buttonContainer} onPress={this.removeToken.bind(this)}>
-              <Text style={styles.buttonText}>Remove Token</Text>
-            </TouchableOpacity>
+          </TouchableHighlight>
+          <TouchableHighlight style={styles.buttonContainer} onPress={this.removeToken.bind(this)}>
+            <Text style={styles.buttonText}>Remove Token</Text>
+          </TouchableHighlight>
+          <TouchableHighlight onPress={this.navigate.bind(this, 'myprofile')} style={styles.buttonContainer}>
+            <Text style={styles.buttonText}>MyProfile</Text>
+          </TouchableHighlight>
 
 
       </View>

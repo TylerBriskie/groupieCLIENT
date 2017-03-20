@@ -15,14 +15,6 @@ import {
 
 import ViewContainer from './ViewContainer'
 
-const loginPress = () => {
-Alert.alert('Login Functionality Not Yet Implemented!');
-};
-
-const signupPress = () => {
-  Alert.alert("Signup functionality not yet implemented");
-}
-
 class Splash extends Component {
 
   navigate(routeName) {
@@ -49,6 +41,9 @@ class Splash extends Component {
         </TouchableHighlight>
         <TouchableHighlight onPress={this.navigate.bind(this, 'browse')} style={styles.button}>
           <Text>Just Browsing...</Text>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={this.navigate.bind(this, 'myprofile')} style={styles.button}>
+          <Text>My Profile</Text>
         </TouchableHighlight>
 
       </ViewContainer>

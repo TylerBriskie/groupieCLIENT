@@ -8,10 +8,9 @@ import {
   StatusBar,
   Dimensions,
   Button,
+  AsyncStorage,
   Image,
-  Alert,
   TouchableHighlight,
-  TouchableOpacity,
   View
 } from 'react-native';
 
@@ -19,6 +18,9 @@ import YouTube from 'react-native-youtube'
 
 import ViewContainer from '../ViewContainer';
 import StatusBarBackground from '../StatusBarBackground';
+
+const ACCESS_TOKEN = 'access_token';
+const USER_ID = 'user_id';
 
 class Browse extends Component {
 
@@ -31,7 +33,7 @@ class Browse extends Component {
       match_content: "",
       match_bio: "",
       match_age: "",
-      match_genres: ["Funk", "Jazz"],
+      match_genres: [],
       errors: ""
     }
   }
@@ -46,8 +48,18 @@ class Browse extends Component {
     return x
   }
 
-  async getUser(){
+  async rejectUser(){
+    console.log("Rejected!!!");
+  }
 
+  async connectUser(){
+    console.log("Sweet Licks!")
+    let token = await AsyncStorage.getItem(ACCESS_TOKEN);
+    console.log(token)
+  }
+
+  async componentDidMount(){
+    // function getRandomUser(){
     try {
       let response = await fetch(`http://localhost:3000/getmatch/random/content`, {
         method: 'GET',
@@ -66,6 +78,7 @@ class Browse extends Component {
             thumbnail: "../../../assets/EVH.jpg",
             match_username: res.username,
             match_content: res.content,
+            match_instrument: res.instrument,
             match_bio: res.bio,
             match_age: res.age,
             match_genres: res.genres,
@@ -84,50 +97,53 @@ class Browse extends Component {
   render(){
     return (
       <ViewContainer>
+
       <View style={styles.browse}>
         <StatusBarBackground />
-          <YouTube
-          videoId="DjpudvU-ZRA"
-          play={true}
-          hidden={false}
-          playsInline={true}
-          onError={(e) => { alert(e.error) }}
-          style={{
-            alignSelf: 'stretch',
-            height: 200,
-            backgroundColor: 'black',
-            marginVertical: 10
-          }}
-        />
-      <View style={styles.row}>
-        <Text style={styles.h2}>{this.state.match_username}</Text>
-        <Text style={styles.h2}>{this.state.match_age}</Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.h2}>{this.state.match_genres}</Text>
+          <View style={{height:230}}>
+            <WebView
+              source={{uri: `${this.state.match_content}`}}
+              style={{height: 100}}
+              allowsInlineMediaPlayback= {true}
+            />
+          </View>
 
-      </View>
-        <Text style={styles.p}>{this.state.match_bio}</Text>
+        <View style={styles.row}>
+          <Text style={styles.h2}>{this.state.match_username}</Text>
+          <Text style={styles.h2}>{this.state.match_instrument}</Text>
+        </View>
+          <Genres genres={this.state.match_genres} />
 
-      </View>
-      <View style={styles.bottom}>
-        <TouchableOpacity style={styles.buttonContainer} onPress={this.getUser.bind(this)}>
-            <Text style={styles.buttonText}>Get User</Text>
-          </TouchableOpacity>
-      </View>
+          <Text style={styles.p}>{this.state.match_bio}</Text>
+
+        </View>
+        <View style={styles.bottom}>
+          <TouchableHighlight onPress={this.rejectUser}>
+            <Image
+              style={styles.image}
+              source={require('../../../assets/thumbsdown.png')}
+            />
+          </TouchableHighlight>
+          <TouchableHighlight onPress={this.connectUser}>
+            <Image
+              style={styles.image}
+              source={require('../../../assets/thumbsup.png')}
+            />
+          </TouchableHighlight>
+        </View>
       </ViewContainer>
     )
 
   }
 }
 
-// const Genres = (props) => {
-//   return (
-//     <View>
-//       {props.match_genres.map((genre, i) => <Text key={i} style = {styles.h2}>{genre}</Text>)}
-//     </View>
-//   )
-// }
+const Genres = (props) => {
+  return (
+    <View>
+      {props.genres.map((genre, i) => <Text key={i} style = {styles.h2}>{genre}</Text>)}
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   browse: {
@@ -142,7 +158,9 @@ const styles = StyleSheet.create({
     marginBottom: 15
   },
   bottom:{
-    marginBottom: 10,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginBottom: 25,
   },
   logoContainer: {
     alignItems: 'center'
@@ -155,17 +173,18 @@ const styles = StyleSheet.create({
     height: 40
   },
   image: {
-    width: 100,
-    height: 100,
+    width: 65,
+    height: 65,
     marginTop: 0,
     resizeMode: 'contain'
   },
   h2: {
-    fontSize: 22,
+    fontSize: 26,
     color:'white'
   },
   p: {
-    fontSize: 16,
+    marginVertical: 20,
+    fontSize: 20,
     color:'white'
   },
   buttonText: {

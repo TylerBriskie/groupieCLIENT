@@ -35,7 +35,7 @@ class Login extends Component {
           />
         </View>
         <View>
-          <LoginForm />
+          <LoginForm navigator={navigator}/>
         </View>
 
         <TouchableHighlight onPress={this.navigateBack.bind(this)} style={styles.buttonContainer}>
