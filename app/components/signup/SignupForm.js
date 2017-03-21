@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Navigator,
-  TextInput, Text, StatusBar,
+  TextInput, Text, StatusBar, Picker,
   KeyboardAvoidingView, TouchableHighlight} from 'react-native';
 
-const USER_AGE = [];
-for (var i = 18; i < 100; i++) {
-  USER_AGE.push(i);
-}
+const Item = Picker.Item;
 
 class SignupForm extends Component {
   constructor() {
@@ -17,7 +14,7 @@ class SignupForm extends Component {
       email: "",
       password: "",
       password_confirm: "",
-      age: 18,
+      genre: "",
       errors: [],
     }
   }
@@ -110,6 +107,18 @@ class SignupForm extends Component {
             // onSubmitEditing={()=> this.passwordInput.focus()}
             style={styles.input}
           />
+        <Text>Pick the genre you like best:</Text>
+          <Picker
+              style={styles.picker}
+              selectedValue={this.state.genre}
+              onValueChange={(val)=>this.setState({genre: val })}>
+              <Item style={{color:'white'}} label="Rock" value="rock" />
+              <Item label="Country" value="country" />
+              <Item label="Jazz" value="jazz" />
+              <Item label="R&B" value="country" />
+
+
+            </Picker>
           <TouchableHighlight style={styles.buttonContainer} onPress={this.onRegisterPressed.bind(this)}>
             <Text style={styles.buttonText}>Sign Up</Text>
           </TouchableHighlight>
@@ -131,7 +140,8 @@ const Errors = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20
+    padding: 20,
+    alignItems: "center"
   },
   input: {
     height: 40,
@@ -147,7 +157,12 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     backgroundColor: '#2980b9',
-    paddingVertical: 15
+    paddingVertical: 15,
+    width: 150
+  },
+  picker: {
+    width: 150,
+    height:75
   },
   buttonText: {
     textAlign: 'center',

@@ -114,7 +114,7 @@ class MyProfile extends Component {
                   onChangeText={(val)=> this.setState({genres: val})}
                   multiline={true}
                   numberOfLines={2}
-                  value={this.state.genres} />
+                  value={Genres} />
 
                 <TouchableHighlight onPress={this.updateInfo.bind(this)} style={styles.buttonContainer}>
                     <Text style={styles.buttonText}>Update Info</Text>
@@ -125,6 +125,14 @@ class MyProfile extends Component {
             </View>
         )
     }
+}
+
+const Genres = (props) => {
+  return (
+    <View>
+      {props.genres.map((genre, i) => <Text key={i} style = {styles.h2}>{genre}</Text>)}
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({

@@ -48,18 +48,7 @@ class Browse extends Component {
     return x
   }
 
-  async rejectUser(){
-    console.log("Rejected!!!");
-  }
-
-  async connectUser(){
-    console.log("Sweet Licks!")
-    let token = await AsyncStorage.getItem(ACCESS_TOKEN);
-    console.log(token)
-  }
-
-  async componentDidMount(){
-    // function getRandomUser(){
+  async getRandomUser(){
     try {
       let response = await fetch(`http://localhost:3000/getmatch/random/content`, {
         method: 'GET',
@@ -75,7 +64,6 @@ class Browse extends Component {
       if (response.status >= 200 && response.status < 300){
           this.setState({
             errors: '',
-            thumbnail: "../../../assets/EVH.jpg",
             match_username: res.username,
             match_content: res.content,
             match_instrument: res.instrument,
@@ -92,6 +80,22 @@ class Browse extends Component {
       console.log("Error: " + error)
       this.setState({errors: error});
     }
+  }
+
+  componentDidMount(){
+    this.getRandomUser()
+
+  }
+
+  rejectUser(){
+    console.log("Rejected!!!");
+    this.getRandomUser()
+
+  }
+
+  async connectUser(){
+    console.log("Sweet Licks!")
+    this.getRandomUser()
   }
 
   render(){

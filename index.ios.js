@@ -10,6 +10,7 @@ import Signup from './app/components/signup/Signup'
 import MyProfile from './app/components/profile/MyProfile'
 import ProfileForm from './app/components/profile/ProfileForm'
 import Browse from './app/components/browse/Browse'
+import GeolocationExample from './app/components/Location'
 // import BrowseNoLogin from './app/components/browse/BrowseNoLogin'
 
 
@@ -35,6 +36,9 @@ export default class groupieCLIENT extends Component {
     }
     if (route.name == 'loginform'){
       return <LoginForm navigator={navigator} />
+    }
+    if (route.name == 'location'){
+      return <GeolocationExample navigator={navigator} />
     }
   }
 
