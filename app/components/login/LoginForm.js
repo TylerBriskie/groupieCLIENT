@@ -4,6 +4,7 @@ import { StyleSheet, Navigator, AsyncStorage, View, TextInput, Text, StatusBar, 
 const ACCESS_TOKEN = 'access_token';
 const USER_ID = 'user_id';
 
+import MyProfile from '../profile/MyProfile'
 
 class LoginForm extends Component {
 
@@ -15,15 +16,6 @@ class LoginForm extends Component {
       password: "",
       error: ""
     }
-  }
-
-  redirect(routeName, token){
-    this.props.navigator.push({
-      name: routeName,
-      passProps: {
-        accessToken: token
-      }
-    })
   }
 
   navigate(routeName) {
@@ -83,7 +75,7 @@ class LoginForm extends Component {
           let accessToken = res;
           this.storeToken(accessToken)
           console.log("Logging dat token:",  accessToken);
-          this.navigate('myprofile');
+          this.props.navigate('myprofile');
       } else {
         let error = res;
         throw error;

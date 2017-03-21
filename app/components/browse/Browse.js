@@ -24,11 +24,12 @@ const USER_ID = 'user_id';
 
 class Browse extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       match_username:"",
+      accessToken:"",
       thumbnail: '',
       match_content: "",
       match_bio: "",
@@ -42,6 +43,16 @@ class Browse extends Component {
     this.props.navigator.pop();
   }
 
+  async navigate(routeName) {
+      this.props.navigator.push({
+        name: routeName,
+        passProps: {
+            projectId: projectId
+        }
+      })
+  }
+
+
   randomUser(){
     let x = Math.floor(Math.random()+4)
     console.log(x);
@@ -50,11 +61,15 @@ class Browse extends Component {
 
   async getRandomUser(){
     try {
+      let token = await AsyncStorage.getItem(ACCESS_TOKEN)
+      console.log("Token Is: ", token);
+      this.setState({accessToken: token})
       let response = await fetch(`http://localhost:3000/getmatch/random/content`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
         }
       });
       let res = await response.json();
@@ -87,15 +102,14 @@ class Browse extends Component {
 
   }
 
-  rejectUser(){
+  async rejectUser(){
     console.log("Rejected!!!");
-    this.getRandomUser()
-
+    this.getRandomUser();
   }
 
   async connectUser(){
     console.log("Sweet Licks!")
-    this.getRandomUser()
+    this.getRandomUser();
   }
 
   render(){
@@ -122,13 +136,13 @@ class Browse extends Component {
 
         </View>
         <View style={styles.bottom}>
-          <TouchableHighlight onPress={this.rejectUser}>
+          <TouchableHighlight onPress={this.rejectUser.bind(this)}>
             <Image
               style={styles.image}
               source={require('../../../assets/thumbsdown.png')}
             />
           </TouchableHighlight>
-          <TouchableHighlight onPress={this.connectUser}>
+          <TouchableHighlight onPress={this.connectUser.bind(this)}>
             <Image
               style={styles.image}
               source={require('../../../assets/thumbsup.png')}

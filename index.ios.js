@@ -20,25 +20,22 @@ export default class groupieCLIENT extends Component {
 
   renderScene(route, navigator) {
     if (route.name == 'splash'){
-      return <Splash navigator={navigator} />
+      return <Splash {...route.passProps} route={route} navigator={navigator} />
     }
     if (route.name == 'signup'){
-      return <Signup navigator={navigator} />
+      return <Signup {...route.passProps} route={route} navigator={navigator} />
     }
     if (route.name == 'login'){
-      return <Login navigator={navigator} />
+      return <Login {...route.passProps} route={route} navigator={navigator} />
     }
     if (route.name == 'browse'){
-      return <Browse navigator={navigator} />
+      return <Browse {...route.passProps} route={route} navigator={navigator} />
     }
     if (route.name == 'myprofile'){
-      return <MyProfile navigator={navigator} />
+      return <MyProfile {...route.passProps} route={route} navigator={navigator} />
     }
     if (route.name == 'loginform'){
-      return <LoginForm navigator={navigator} />
-    }
-    if (route.name == 'location'){
-      return <GeolocationExample navigator={navigator} />
+      return <LoginForm {...route.passProps} route={route} navigator={navigator} />
     }
   }
 

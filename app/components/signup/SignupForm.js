@@ -12,9 +12,9 @@ class SignupForm extends Component {
     this.state = {
       username: "",
       email: "",
+      instrument: "",
       password: "",
       password_confirm: "",
-      genre: "",
       errors: [],
     }
   }
@@ -43,7 +43,8 @@ class SignupForm extends Component {
             username: this.state.username,
             email: this.state.email,
             password: this.state.password,
-            password_confirm: this.state.password_confirm
+            password_confirm: this.state.password_confirm,
+            instrument: this.state.instrument
 
         })
       });
@@ -107,18 +108,15 @@ class SignupForm extends Component {
             // onSubmitEditing={()=> this.passwordInput.focus()}
             style={styles.input}
           />
-        <Text>Pick the genre you like best:</Text>
-          <Picker
-              style={styles.picker}
-              selectedValue={this.state.genre}
-              onValueChange={(val)=>this.setState({genre: val })}>
-              <Item style={{color:'white'}} label="Rock" value="rock" />
-              <Item label="Country" value="country" />
-              <Item label="Jazz" value="jazz" />
-              <Item label="R&B" value="country" />
+          <TextInput
+            placeholder="Your Instrument"
+            onChangeText={(val)=> this.setState({instrument: val})}
+            secureTextEntry
+            returnKeyType="next"
+            // onSubmitEditing={()=> this.passwordInput.focus()}
+            style={styles.input}
+          />
 
-
-            </Picker>
           <TouchableHighlight style={styles.buttonContainer} onPress={this.onRegisterPressed.bind(this)}>
             <Text style={styles.buttonText}>Sign Up</Text>
           </TouchableHighlight>
