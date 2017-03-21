@@ -107,7 +107,7 @@ class MyProfile extends Component {
           ],
           { cancelable: false }
         )
-        this.navigate('MyProfile')
+        this.navigate('myprofile')
       }catch (error){
         console.log("Error:", error)
       }
@@ -152,12 +152,14 @@ class MyProfile extends Component {
             'Authorization': 'Bearer ' + token
           }
         })
-        // this.navigate('browse');
+
         Alert.alert(
           'Genres Removed',
           'Add some more or your content won\'t be visible to other users',
           [
-            {text: 'Right On', onPress: () => console.log('OK Pressed')},
+            {text: 'Right On', onPress: () =>
+              this.navigate('myprofile')
+            },
           ],
           { cancelable: false }
         )
