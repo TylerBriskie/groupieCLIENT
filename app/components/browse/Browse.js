@@ -49,18 +49,15 @@ class Browse extends Component {
 
   async navigate(routeName) {
       this.props.navigator.push({
-        name: routeName,
-        passProps: {
-            projectId: projectId
-        }
+        name: routeName
       })
-  }
+    }
 
   async getRandomUser(){
     try {
       let token = await AsyncStorage.getItem(ACCESS_TOKEN)
       this.setState({accessToken: token})
-      let response = await fetch(`http://localhost:3000/getmatch/random/content`, {
+      let response = await fetch(`https://groupie-server.herokuapp.com/getmatch/random/content`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -106,7 +103,7 @@ class Browse extends Component {
     this.getRandomUser();
     let token = await AsyncStorage.getItem(ACCESS_TOKEN)
     this.setState({accessToken: token})
-    let response = fetch(`http://localhost:3000/getmatch/reject/${this.state.match_id}`, {
+    let response = fetch(`https://groupie-server.herokuapp.com/getmatch/reject/${this.state.match_id}`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -123,7 +120,7 @@ class Browse extends Component {
     this.getRandomUser();
     let token = await AsyncStorage.getItem(ACCESS_TOKEN)
     this.setState({accessToken: token})
-    let response = fetch(`http://localhost:3000/getmatch/accept/${this.state.match_id}`, {
+    let response = fetch(`https://groupie-server.herokuapp.com/getmatch/accept/${this.state.match_id}`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -153,6 +150,12 @@ class Browse extends Component {
 
       <View style={styles.browse}>
         <StatusBarBackground />
+          <TouchableHighlight onPress={this.navigate.bind(this, 'splash')}>
+            <Image
+              style={styles.backArrow}
+              source={require('../../../assets/left_arrow.png')}
+            />
+          </TouchableHighlight>
           <View style={{height:230}}>
             <WebView
               source={{uri: `${this.state.match_content}`}}
@@ -238,6 +241,12 @@ const styles = StyleSheet.create({
     width: 65,
     height: 65,
     marginTop: 0,
+    resizeMode: 'contain'
+  },
+  backArrow: {
+    width:30,
+    height:30,
+    marginTop:0,
     resizeMode: 'contain'
   },
   h2: {

@@ -11,6 +11,7 @@
     "react-native": "0.42.0",
     "react-native-dropdown": "0.0.6",
     "react-native-selectme": "^1.2.3",
+    "react-native-sidebar": "^0.2.0",
     "react-native-youtube": "^0.8.1"
   },
   "devDependencies": {

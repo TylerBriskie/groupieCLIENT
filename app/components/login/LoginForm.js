@@ -53,7 +53,7 @@ class LoginForm extends Component {
 
   async onLoginPressed(){
     try {
-      let response = await fetch('http://localhost:3000/login', {
+      let response = await fetch('https://groupie-server.herokuapp.com/login', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -74,6 +74,8 @@ class LoginForm extends Component {
           this.setState({error: ''});
           let accessToken = res;
           this.storeToken(accessToken)
+          this.setState({logged_in: true})
+          this.setState({loggin_button_text: "log out"})
           console.log("Logging dat token:",  accessToken);
           this.props.navigate('myprofile');
       } else {

@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { AppRegistry, StatusBar, Navigator, TouchableElement, Button, Alert, StyleSheet, Text, View, Image } from 'react-native';
 
+
 const ViewContainer = require('./app/components/ViewContainer')
 const StatusBarBackground = require('./app/components/StatusBarBackground')
 const Login = require ('./app/components/login/Login')
@@ -48,6 +49,7 @@ export default class groupieCLIENT extends Component {
         renderScene={this.renderScene.bind(this)}
         />
     </ViewContainer>
+
     );
   }
 }

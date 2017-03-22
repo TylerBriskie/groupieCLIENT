@@ -17,10 +17,23 @@ import ViewContainer from './ViewContainer'
 
 class Splash extends Component {
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      logged_in: false,
+      loggin_button_text: "Login"
+    }
+  }
+
   navigate(routeName) {
       this.props.navigator.push({
         name: routeName
       })
+  }
+
+  loginButton(props){
+
   }
 
   render() {
@@ -34,7 +47,7 @@ class Splash extends Component {
             source={require("../../assets/GroupieLogo.png")}
           />
         <TouchableHighlight onPress={this.navigate.bind(this, 'login')} style={styles.button}>
-          <Text>Login</Text>
+          <Text>{this.state.loggin_button_text}</Text>
         </TouchableHighlight>
         <TouchableHighlight onPress={this.navigate.bind(this, 'signup')} style={styles.button}>
           <Text>Sign Up</Text>

@@ -58,7 +58,7 @@ class MyProfile extends Component {
     async updateBio(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('http://localhost:3000/myprofile/updateBio', {
+        let result = fetch('https://groupie-server.herokuapp.com/myprofile/updateBio', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -87,7 +87,7 @@ class MyProfile extends Component {
     async updateGenres(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('http://localhost:3000/myprofile/addGenre', {
+        let result = fetch('https://groupie-server.herokuapp.com/myprofile/addGenre', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -116,7 +116,7 @@ class MyProfile extends Component {
     async updateInstrument(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('http://localhost:3000/myprofile/updateInstrument', {
+        let result = fetch('https://groupie-server.herokuapp.com/myprofile/updateInstrument', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -144,7 +144,7 @@ class MyProfile extends Component {
     async removeGenre(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('http://localhost:3000/myprofile/removeGenre', {
+        let result = fetch('https://groupie-server.herokuapp.com/myprofile/removeGenre', {
           method: 'DELETE',
           headers: {
             'Accept': 'application/json',
@@ -172,7 +172,7 @@ class MyProfile extends Component {
     async updateContent(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('http://localhost:3000/myprofile/updateContent', {
+        let result = fetch('https://groupie-server.herokuapp.com/myprofile/updateContent', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -213,7 +213,7 @@ class MyProfile extends Component {
     async deleteProfileSure(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('http://localhost:3000/myprofile/deleteProfile', {
+        let result = fetch('https://groupie-server.herokuapp.com/myprofile/deleteProfile', {
           method: 'DELETE',
           headers: {
             'Accept': 'application/json',
@@ -239,7 +239,7 @@ class MyProfile extends Component {
             let token = await AsyncStorage.getItem(ACCESS_TOKEN)
             console.log("Token Is: ", token);
             this.setState({accessToken: token})
-            let result = await fetch('http://localhost:3000/myprofile', {
+            let result = await fetch('https://groupie-server.herokuapp.com/myprofile', {
                 method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + token
@@ -263,6 +263,12 @@ class MyProfile extends Component {
         return (
           <View style={styles.container}>
             <ScrollView>
+              <TouchableHighlight onPress={this.navigate.bind(this, 'splash')}>
+                <Image
+                  style={styles.backArrow}
+                  source={require('../../../assets/left_arrow.png')}
+                />
+              </TouchableHighlight>
 
                 <Text style={styles.h1}>{this.state.username}</Text>
                 <Text style={styles.h3}>Edit Bio:</Text>
@@ -272,8 +278,13 @@ class MyProfile extends Component {
                   numberOfLines={4}
                   value={this.state.bio} />
                 <TouchableHighlight onPress={this.updateBio.bind(this)} style={styles.buttonContainer}>
-                      <Text style={styles.buttonText}>Update Bio</Text>
-                  </TouchableHighlight>
+                  <Text style={styles.buttonText}>Update Bio</Text>
+                </TouchableHighlight>
+
+                <Image
+                  style={styles.lineBreak}
+                  source={require('../../../assets/white_line.png')}
+                />
 
               <Text style={styles.h3}>Youtube or Soundcloud URL: </Text>
                 <TextInput style={styles.smallInput}
@@ -285,6 +296,11 @@ class MyProfile extends Component {
               <TouchableHighlight onPress={this.updateContent.bind(this)} style={styles.buttonContainer}>
                     <Text style={styles.buttonText}>Update Content URL</Text>
               </TouchableHighlight>
+
+              <Image
+                style={styles.lineBreak}
+                source={require('../../../assets/white_line.png')}
+              />
 
                 <View style={styles.row}>
                   <Text style={styles.h3}>My Genres: </Text>
@@ -304,6 +320,11 @@ class MyProfile extends Component {
                     <Text style={styles.buttonText}>Clear My Genres</Text>
                 </TouchableHighlight>
 
+                <Image
+                  style={styles.lineBreak}
+                  source={require('../../../assets/white_line.png')}
+                />
+
                 <View style={styles.row}>
                   <Text style={styles.h3}>My Instrument: </Text>
                 </View>
@@ -316,6 +337,10 @@ class MyProfile extends Component {
                     <Text style={styles.buttonText}>Change Instrument</Text>
                 </TouchableHighlight>
 
+                <Image
+                  style={styles.lineBreak}
+                  source={require('../../../assets/white_line.png')}
+                />
 
                 <TouchableHighlight onPress={this.navigate.bind(this, 'browse')} style={styles.backButton}>
                     <Text style={styles.buttonText}>Back to Browsing</Text>
@@ -359,16 +384,26 @@ const styles = StyleSheet.create({
       marginBottom: 25
 
     },
+    lineBreak: {
+      height:40,
+      width:400
+    },
     h3: {
       fontSize: 20,
       color:'white'
     },
     input: {
       height: 60,
-      backgroundColor: 'rgba(255,255,255,0.2)',
+      backgroundColor: 'rgba(255,255,255,0.3)',
       marginBottom: 10,
       color: '#FFF',
       paddingHorizontal: 10
+    },
+    backArrow: {
+      width:30,
+      height:30,
+      marginTop:0,
+      resizeMode: 'contain'
     },
     smallInput:{
       height: 40,
@@ -380,14 +415,14 @@ const styles = StyleSheet.create({
     buttonContainer: {
         backgroundColor: 'rgba(0,155,85,1)',
         paddingVertical: 10,
-        marginTop: 5,
-        marginBottom: 15,
+        marginTop: 15,
+        marginBottom: 25,
         height: 40
     },
     backButton:{
       backgroundColor: 'rgba(255,155,0,1)',
       paddingTop: 10,
-      marginVertical: 5,
+      marginVertical: 20,
       height: 40
     },
     redButton:{
