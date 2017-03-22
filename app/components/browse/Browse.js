@@ -30,7 +30,9 @@ class Browse extends Component {
     this.state = {
       match_username:"",
       accessToken:"",
+      my_id:'',
       thumbnail: '',
+      match_id: '',
       match_content: "",
       match_bio: "",
       match_age: "",
@@ -52,17 +54,9 @@ class Browse extends Component {
       })
   }
 
-
-  randomUser(){
-    let x = Math.floor(Math.random()+4)
-    console.log(x);
-    return x
-  }
-
   async getRandomUser(){
     try {
       let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-      console.log("Token Is: ", token);
       this.setState({accessToken: token})
       let response = await fetch(`http://localhost:3000/getmatch/random/content`, {
         method: 'GET',
@@ -80,6 +74,7 @@ class Browse extends Component {
           this.setState({
             errors: '',
             match_username: res.username,
+            match_id: res.user_id,
             match_content: res.content,
             match_instrument: res.instrument,
             match_bio: res.bio,
@@ -104,12 +99,37 @@ class Browse extends Component {
 
   async rejectUser(){
     console.log("Rejected!!!");
+    console.log(this.state.match_id)
     this.getRandomUser();
+    let token = await AsyncStorage.getItem(ACCESS_TOKEN)
+    this.setState({accessToken: token})
+    let response = fetch(`http://localhost:3000/getmatch/reject/${this.state.match_id}`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      }
+    }).then((response)=>{
+      console.log("user rejected:", response)
+    });
   }
 
   async connectUser(){
-    console.log("Sweet Licks!")
+    console.log(this.state.match_id)
     this.getRandomUser();
+    let token = await AsyncStorage.getItem(ACCESS_TOKEN)
+    this.setState({accessToken: token})
+    let response = fetch(`http://localhost:3000/getmatch/accept/${this.state.match_id}`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      }
+    }).then((response)=>{
+      console.log("user accepted:", response)
+    });
   }
 
   render(){
@@ -141,6 +161,9 @@ class Browse extends Component {
               style={styles.image}
               source={require('../../../assets/thumbsdown.png')}
             />
+          </TouchableHighlight>
+          <TouchableHighlight onPress={this.getRandomUser.bind(this)}>
+            <Text>GET A NEW USER</Text>
           </TouchableHighlight>
           <TouchableHighlight onPress={this.connectUser.bind(this)}>
             <Image

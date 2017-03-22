@@ -52,7 +52,7 @@ class SignupForm extends Component {
       console.log(response)
       if (response.status >= 200 && response.status < 300){
           console.log("res is: ", res)
-          navigate('myProfile')
+          this.props.navigate('myprofile')
       } else {
         let errors = res;
         throw errors;
@@ -117,7 +117,7 @@ class SignupForm extends Component {
             style={styles.input}
           />
 
-          <TouchableHighlight style={styles.buttonContainer} onPress={this.onRegisterPressed.bind(this)}>
+        <TouchableHighlight style={styles.buttonContainer} onPress={this.onRegisterPressed.bind(this)}>
             <Text style={styles.buttonText}>Sign Up</Text>
           </TouchableHighlight>
           <Errors errors={this.state.errors} />

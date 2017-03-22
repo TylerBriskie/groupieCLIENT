@@ -86,59 +86,7 @@ class Signup extends Component {
             source={require("../../../assets/GroupieLogo.png")}
           />
         </View>
-        <View style={styles.formContainer}>
-          <StatusBar
-            barStyle= "light-content"
-          />
-          <TextInput
-            placeholder="E-mail"
-            onChangeText={(val) => this.setState({email: val})}
-            returnKeyType="next"
-            keyboardType = 'email-address'
-            autoCapitalize= 'none'
-            autoCorrect={false}
-            // onSubmitEditing={()=> this.passwordInput.focus()}
-            style={styles.input}
-          />
-          <TextInput
-            placeholder="UserName"
-            onChangeText={(val) => this.setState({username: val})}
-            returnKeyType="next"
-            autoCapitalize= 'none'
-            autoCorrect={false}
-            // onSubmitEditing={()=> this.passwordInput.focus()}
-            style={styles.input}
-          />
-            <TextInput
-              placeholder="Password"
-              onChangeText={(val)=> this.setState({password: val})}
-              secureTextEntry
-              returnKeyType="next"
-              // onSubmitEditing={()=> this.passwordInput.focus()}
-              style={styles.input}
-            />
-            <TextInput
-              placeholder="Confirm Password"
-              onChangeText={(val)=> this.setState({password_confirm: val})}
-              secureTextEntry
-              returnKeyType="next"
-              // onSubmitEditing={()=> this.passwordInput.focus()}
-              style={styles.input}
-            />
-            <TextInput
-              placeholder="Your Instrument"
-              onChangeText={(val)=> this.setState({instrument: val})}
-              secureTextEntry
-              returnKeyType="next"
-              // onSubmitEditing={()=> this.passwordInput.focus()}
-              style={styles.input}
-            />
-
-          <TouchableHighlight style={styles.buttonContainer} onPress={this.onRegisterPressed.bind(this)}>
-              <Text style={styles.buttonText}>Sign Up</Text>
-            </TouchableHighlight>
-            <Errors errors={this.state.errors} />
-        </View>
+        <SignupForm navigate={this.navigate.bind(this)} />
         <TouchableHighlight onPress={this.navigateBack.bind(this)} style={styles.buttonContainer}>
           <Text style={styles.buttonText}>Back</Text>
         </TouchableHighlight>
