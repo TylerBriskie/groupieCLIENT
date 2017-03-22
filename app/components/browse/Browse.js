@@ -6,6 +6,7 @@ import {
   WebView,
   Text,
   StatusBar,
+  Alert,
   Dimensions,
   Button,
   AsyncStorage,
@@ -33,6 +34,7 @@ class Browse extends Component {
       my_id:'',
       thumbnail: '',
       match_id: '',
+      match_email: "",
       match_content: "",
       match_bio: "",
       match_age: "",
@@ -79,6 +81,7 @@ class Browse extends Component {
             match_instrument: res.instrument,
             match_bio: res.bio,
             match_age: res.age,
+            match_email: res.email,
             match_genres: res.genres,
           });
 
@@ -127,9 +130,21 @@ class Browse extends Component {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token
       }
-    }).then((response)=>{
-      console.log("user accepted:", response)
+    }).then(()=>{
+      this.mutualConnectionMade(this.state.match_email);
     });
+  }
+
+  mutualConnectionMade(connectee){
+    console.log("Mutual Connection Made")
+    Alert.alert(
+      'You\'ve made a connection!',
+      'Drop them a line at ' + connectee,
+      [
+        {text: 'Right On', onPress: () => console.log('OK Pressed')},
+      ],
+      { cancelable: false }
+    )
   }
 
   render(){
@@ -162,8 +177,8 @@ class Browse extends Component {
               source={require('../../../assets/thumbsdown.png')}
             />
           </TouchableHighlight>
-          <TouchableHighlight onPress={this.getRandomUser.bind(this)}>
-            <Text>GET A NEW USER</Text>
+          <TouchableHighlight style={styles.skipContainer} onPress={this.getRandomUser.bind(this)}>
+            <Text style={styles.h3}>SKIP</Text>
           </TouchableHighlight>
           <TouchableHighlight onPress={this.connectUser.bind(this)}>
             <Image
@@ -206,6 +221,12 @@ const styles = StyleSheet.create({
   logoContainer: {
     alignItems: 'center'
   },
+  skipContainer:{
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    width: 200,
+    justifyContent: "center",
+    alignItems: "center"
+  },
   buttonContainer: {
     backgroundColor: 'rgba(255,255,255,0.2)',
     paddingVertical: 15,
@@ -222,6 +243,10 @@ const styles = StyleSheet.create({
   h2: {
     fontSize: 26,
     color:'white'
+  },
+  h3:{
+    fontSize: 20,
+    color: 'white'
   },
   p: {
     marginVertical: 20,

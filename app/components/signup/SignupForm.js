@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Navigator,
-  TextInput, Text, StatusBar, Picker,
+  TextInput, Text, StatusBar, 
+  AsyncStorage,
   KeyboardAvoidingView, TouchableHighlight} from 'react-native';
 
-const Item = Picker.Item;
+const ACCESS_TOKEN = 'access_token';
 
 class SignupForm extends Component {
   constructor() {
@@ -28,6 +29,32 @@ class SignupForm extends Component {
   navigateBack(){
     this.props.navigator.pop();
   }
+  async storeToken(accessToken){
+    try {
+      await AsyncStorage.setItem(ACCESS_TOKEN, accessToken);
+      this.getToken();
+    } catch(error) {
+      console.log("Error: " + error)
+    }
+  }
+
+  async getToken(){
+    try {
+      let token = await AsyncStorage.getItem(ACCESS_TOKEN);
+      console.log("Token Is: ", token);
+    } catch(error) {
+      console.log("Error: " + error)
+    }
+  }
+
+  async removeToken(){
+    try {
+      await AsyncStorage.removeItem(ACCESS_TOKEN);
+      this.getToken();
+    } catch(error) {
+      console.log("Something went wrong...")
+    }
+  }
 
   async onRegisterPressed(){
     console.log("pressed register")
@@ -48,9 +75,12 @@ class SignupForm extends Component {
 
         })
       });
+      // this.removeToken()
       let res = await response.text();
-      console.log(response)
       if (response.status >= 200 && response.status < 300){
+          this.setState({error: ''});
+          let accessToken = res;
+          this.storeToken(accessToken)
           console.log("res is: ", res)
           this.props.navigate('myprofile')
       } else {
@@ -67,6 +97,10 @@ class SignupForm extends Component {
     }
   }
 
+  focusNextField = (nextField) => {
+    this.refs[nextField].focus();
+  };
+
   render(){
     return (
       <View style={styles.container}>
@@ -80,40 +114,43 @@ class SignupForm extends Component {
           keyboardType = 'email-address'
           autoCapitalize= 'none'
           autoCorrect={false}
-          // onSubmitEditing={()=> this.passwordInput.focus()}
+          onSubmitEditing={()=> this.focusNextField('username')}
           style={styles.input}
         />
         <TextInput
+          ref="username"
           placeholder="UserName"
           onChangeText={(val) => this.setState({username: val})}
           returnKeyType="next"
           autoCapitalize= 'none'
           autoCorrect={false}
-          // onSubmitEditing={()=> this.passwordInput.focus()}
+          onSubmitEditing={()=> this.focusNextField('pw1')}
           style={styles.input}
         />
           <TextInput
+            ref="pw1"
             placeholder="Password"
             onChangeText={(val)=> this.setState({password: val})}
             secureTextEntry
             returnKeyType="next"
-            // onSubmitEditing={()=> this.passwordInput.focus()}
+            onSubmitEditing={()=> this.focusNextField('pw2')}
             style={styles.input}
           />
           <TextInput
+            ref="pw2"
             placeholder="Confirm Password"
             onChangeText={(val)=> this.setState({password_confirm: val})}
             secureTextEntry
             returnKeyType="next"
-            // onSubmitEditing={()=> this.passwordInput.focus()}
+            onSubmitEditing={()=> this.focusNextField('instrument')}
             style={styles.input}
           />
           <TextInput
+            ref="instrument"
             placeholder="Your Instrument"
+            autoCorrect={false}
             onChangeText={(val)=> this.setState({instrument: val})}
-            secureTextEntry
-            returnKeyType="next"
-            // onSubmitEditing={()=> this.passwordInput.focus()}
+            returnKeyType="go"
             style={styles.input}
           />
 
