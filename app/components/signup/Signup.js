@@ -43,7 +43,7 @@ class Signup extends Component {
   async onRegisterPressed(){
     console.log("pressed register")
     try {
-      let response = await fetch('http://localhost:3000/signup', {
+      let response = await fetch('https://groupie-server.herokuapp.com/signup', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',

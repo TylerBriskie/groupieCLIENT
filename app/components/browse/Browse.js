@@ -59,7 +59,7 @@ class Browse extends Component {
     try {
       let token = await AsyncStorage.getItem(ACCESS_TOKEN)
       this.setState({accessToken: token})
-      let response = await fetch(`http://localhost:3000/getmatch/random/content`, {
+      let response = await fetch(`https://groupie-server.herokuapp.com/getmatch/random/content`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -115,7 +115,7 @@ class Browse extends Component {
     console.log(this.state.match_id)
     let token = await AsyncStorage.getItem(ACCESS_TOKEN)
     this.setState({accessToken: token})
-    let response = fetch(`http://localhost:3000/getmatch/reject/${this.state.match_id}`, {
+    let response = fetch(`https://groupie-server.herokuapp.com/getmatch/reject/${this.state.match_id}`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -132,7 +132,7 @@ class Browse extends Component {
     console.log(this.state.match_id)
     let token = await AsyncStorage.getItem(ACCESS_TOKEN)
     this.setState({accessToken: token})
-    let response = fetch(`http://localhost:3000/getmatch/accept/${this.state.match_id}`, {
+    let response = fetch(`https://groupie-server.herokuapp.com/getmatch/accept/${this.state.match_id}`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
