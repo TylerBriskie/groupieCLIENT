@@ -39,7 +39,9 @@ class Browse extends Component {
       match_bio: "",
       match_age: "",
       match_genres: [],
-      errors: ""
+      errors: "",
+      button_text: "SKIP",
+      button_destination: this.getRandomUser.bind(this)
     }
   }
 
@@ -57,7 +59,7 @@ class Browse extends Component {
     try {
       let token = await AsyncStorage.getItem(ACCESS_TOKEN)
       this.setState({accessToken: token})
-      let response = await fetch(`https://groupie-server.herokuapp.com/getmatch/random/content`, {
+      let response = await fetch(`http://localhost:3000/getmatch/random/content`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -83,6 +85,17 @@ class Browse extends Component {
           });
 
       } else {
+        this.setState({
+          match_username: '',
+          match_bio: "no users found...get back to practice and try again later!",
+          match_age: '',
+          match_genres: [],
+          match_id: null,
+          match_instrument: '',
+          match_content: 'https://yeupsac.files.wordpress.com/2015/08/denied-stamp.png?w=320',
+          button_text: 'Back Home',
+          button_destination: this.navigate.bind(this, 'splash')
+        })
         let error = res;
         throw error;
       }
@@ -100,36 +113,39 @@ class Browse extends Component {
   async rejectUser(){
     console.log("Rejected!!!");
     console.log(this.state.match_id)
-    this.getRandomUser();
     let token = await AsyncStorage.getItem(ACCESS_TOKEN)
     this.setState({accessToken: token})
-    let response = fetch(`https://groupie-server.herokuapp.com/getmatch/reject/${this.state.match_id}`, {
+    let response = fetch(`http://localhost:3000/getmatch/reject/${this.state.match_id}`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token
       }
-    }).then((response)=>{
-      console.log("user rejected:", response)
-    });
+    })
+      console.log("user rejected:")
+      this.getRandomUser();
+
   }
 
   async connectUser(){
     console.log(this.state.match_id)
-    this.getRandomUser();
     let token = await AsyncStorage.getItem(ACCESS_TOKEN)
     this.setState({accessToken: token})
-    let response = fetch(`https://groupie-server.herokuapp.com/getmatch/accept/${this.state.match_id}`, {
+    let response = fetch(`http://localhost:3000/getmatch/accept/${this.state.match_id}`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token
       }
-    }).then(()=>{
+    }).then((hi)=>{
+      console.log('comeback: ', hi)
+      console.log("User connected")
       this.mutualConnectionMade(this.state.match_email);
     });
+    this.getRandomUser();
+
   }
 
   mutualConnectionMade(connectee){
@@ -180,8 +196,8 @@ class Browse extends Component {
               source={require('../../../assets/thumbsdown.png')}
             />
           </TouchableHighlight>
-          <TouchableHighlight style={styles.skipContainer} onPress={this.getRandomUser.bind(this)}>
-            <Text style={styles.h3}>SKIP</Text>
+          <TouchableHighlight style={styles.skipContainer} onPress={this.state.button_destination}>
+            <Text style={styles.h3}>{this.state.button_text}</Text>
           </TouchableHighlight>
           <TouchableHighlight onPress={this.connectUser.bind(this)}>
             <Image

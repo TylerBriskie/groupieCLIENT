@@ -53,7 +53,7 @@ class LoginForm extends Component {
 
   async onLoginPressed(){
     try {
-      let response = await fetch('https://groupie-server.herokuapp.com/login', {
+      let response = await fetch('http://localhost:3000/login', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -119,15 +119,7 @@ class LoginForm extends Component {
       <TouchableHighlight style={styles.buttonContainer} onPress={this.onLoginPressed.bind(this)}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableHighlight>
-        <TouchableHighlight style={styles.buttonContainer} onPress={this.getToken.bind(this)}>
-            <Text style={styles.buttonText}>Access Token?</Text>
-          </TouchableHighlight>
-          <TouchableHighlight style={styles.buttonContainer} onPress={this.removeToken.bind(this)}>
-            <Text style={styles.buttonText}>Remove Token</Text>
-          </TouchableHighlight>
-          <TouchableHighlight onPress={this.navigate.bind(this, 'myprofile')} style={styles.buttonContainer}>
-            <Text style={styles.buttonText}>MyProfile</Text>
-          </TouchableHighlight>
+
 
 
       </View>

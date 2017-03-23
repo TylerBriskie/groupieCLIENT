@@ -58,7 +58,7 @@ class MyProfile extends Component {
     async updateBio(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('https://groupie-server.herokuapp.com/myprofile/updateBio', {
+        let result = fetch('http://localhost:3000/myprofile/updateBio', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -87,7 +87,7 @@ class MyProfile extends Component {
     async updateGenres(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('https://groupie-server.herokuapp.com/myprofile/addGenre', {
+        let result = fetch('http://localhost:3000/myprofile/addGenre', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -116,7 +116,7 @@ class MyProfile extends Component {
     async updateInstrument(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('https://groupie-server.herokuapp.com/myprofile/updateInstrument', {
+        let result = fetch('http://localhost:3000/myprofile/updateInstrument', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -144,7 +144,7 @@ class MyProfile extends Component {
     async removeGenre(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('https://groupie-server.herokuapp.com/myprofile/removeGenre', {
+        let result = fetch('http://localhost:3000/myprofile/removeGenre', {
           method: 'DELETE',
           headers: {
             'Accept': 'application/json',
@@ -172,7 +172,7 @@ class MyProfile extends Component {
     async updateContent(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('https://groupie-server.herokuapp.com/myprofile/updateContent', {
+        let result = fetch('http://localhost:3000/myprofile/updateContent', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -213,7 +213,7 @@ class MyProfile extends Component {
     async deleteProfileSure(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('https://groupie-server.herokuapp.com/myprofile/deleteProfile', {
+        let result = fetch('http://localhost:3000/myprofile/deleteProfile', {
           method: 'DELETE',
           headers: {
             'Accept': 'application/json',
@@ -239,7 +239,7 @@ class MyProfile extends Component {
             let token = await AsyncStorage.getItem(ACCESS_TOKEN)
             console.log("Token Is: ", token);
             this.setState({accessToken: token})
-            let result = await fetch('https://groupie-server.herokuapp.com/myprofile', {
+            let result = await fetch('http://localhost:3000/myprofile', {
                 method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + token
@@ -393,9 +393,10 @@ const styles = StyleSheet.create({
       color:'white'
     },
     input: {
-      height: 60,
+      height: 70,
       backgroundColor: 'rgba(255,255,255,0.3)',
       marginBottom: 10,
+      fontSize: 16,
       color: '#FFF',
       paddingHorizontal: 10
     },
@@ -407,6 +408,7 @@ const styles = StyleSheet.create({
     },
     smallInput:{
       height: 40,
+      fontSize: 14,
       backgroundColor: 'rgba(255,255,255,0.2)',
       marginBottom: 10,
       color: '#FFF',
