@@ -58,7 +58,7 @@ class MyProfile extends Component {
     async updateBio(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('https://groupie-server.herokuapp.com/myprofile/updateBio', {
+        let result = fetch('http://localhost:3000/myprofile/updateBio', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -87,7 +87,7 @@ class MyProfile extends Component {
     async updateGenres(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('https://groupie-server.herokuapp.com/myprofile/addGenre', {
+        let result = fetch('http://localhost:3000/myprofile/addGenre', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -108,6 +108,9 @@ class MyProfile extends Component {
           { cancelable: false }
         )
         this.getUserInfo()
+        this.setState({
+          addGenre: ""
+        })
       }catch (error){
         console.log("Error:", error)
       }
@@ -116,7 +119,7 @@ class MyProfile extends Component {
     async updateInstrument(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('https://groupie-server.herokuapp.com/myprofile/updateInstrument', {
+        let result = fetch('http://localhost:3000/myprofile/updateInstrument', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -144,7 +147,7 @@ class MyProfile extends Component {
     async removeGenre(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('https://groupie-server.herokuapp.com/myprofile/removeGenre', {
+        let result = fetch('http://localhost:3000/myprofile/removeGenre', {
           method: 'DELETE',
           headers: {
             'Accept': 'application/json',
@@ -158,7 +161,7 @@ class MyProfile extends Component {
           'Add some more or your content won\'t be visible to other users',
           [
             {text: 'Right On', onPress: () =>
-              this.navigate('myprofile')
+              this.getUserInfo()
             },
           ],
           { cancelable: false }
@@ -172,7 +175,7 @@ class MyProfile extends Component {
     async updateContent(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('https://groupie-server.herokuapp.com/myprofile/updateContent', {
+        let result = fetch('http://localhost:3000/myprofile/updateContent', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -213,7 +216,7 @@ class MyProfile extends Component {
     async deleteProfileSure(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('https://groupie-server.herokuapp.com/myprofile/deleteProfile', {
+        let result = fetch('http://localhost:3000/myprofile/deleteProfile', {
           method: 'DELETE',
           headers: {
             'Accept': 'application/json',
@@ -238,7 +241,7 @@ class MyProfile extends Component {
           let token = await AsyncStorage.getItem(ACCESS_TOKEN)
           console.log("Token Is: ", token);
           this.setState({accessToken: token})
-          let result = await fetch('https://groupie-server.herokuapp.com/myprofile', {
+          let result = await fetch('http://localhost:3000/myprofile', {
               method: 'GET',
               headers: {
                   'Authorization': 'Bearer ' + token
@@ -251,7 +254,8 @@ class MyProfile extends Component {
             bio: profile.bio,
             instrument: profile.instrument,
             content_url: profile.content_url,
-            genres: profile.genres
+            genres: profile.genres,
+            addGenre: '',
           })
       } catch (error) {
           console.log("Error: " + error)
@@ -312,9 +316,9 @@ class MyProfile extends Component {
 
                 <TextInput style={styles.smallInput}
                   onChangeText={(val)=> this.setState({addGenre: val})}
-                  multiline={true}
-                  numberOfLines={2}
-                  placeholder="Enter a new genre" />
+                  clearTextOnFocus = {true}
+                  placeholder="Enter a new genre"
+                  value={this.state.addGenre} />
 
                 <TouchableHighlight onPress={this.updateGenres.bind(this)} style={styles.buttonContainer}>
                     <Text style={styles.buttonText}>Add Genre</Text>

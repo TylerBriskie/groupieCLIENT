@@ -59,7 +59,7 @@ class Browse extends Component {
     try {
       let token = await AsyncStorage.getItem(ACCESS_TOKEN)
       this.setState({accessToken: token})
-      let response = await fetch(`https://groupie-server.herokuapp.com/getmatch/random/content`, {
+      let response = await fetch(`http://localhost:3000/getmatch/random/content`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -67,10 +67,8 @@ class Browse extends Component {
           'Authorization': 'Bearer ' + token
         }
       });
-      let res = await response.json();
+      let res = await response.json()
       console.log(res)
-      console.log("type of res.genres: ", typeof res.genres)
-
       if (response.status >= 200 && response.status < 300){
           this.setState({
             errors: '',
@@ -115,16 +113,22 @@ class Browse extends Component {
     console.log(this.state.match_id)
     let token = await AsyncStorage.getItem(ACCESS_TOKEN)
     this.setState({accessToken: token})
-    let response = fetch(`https://groupie-server.herokuapp.com/getmatch/reject/${this.state.match_id}`, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
-      }
-    })
-      console.log("user rejected:")
-      this.getRandomUser();
+    try {
+      fetch(`http://localhost:3000/getmatch/reject/${this.state.match_id}`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        }
+      }).then((reject)=>{
+        console.log("message from server: ", reject)
+        console.log("user rejected: ", this.state.match_id)
+        this.getRandomUser();
+      })
+    } catch (error){
+      throw error
+    }
 
   }
 
@@ -132,20 +136,29 @@ class Browse extends Component {
     console.log(this.state.match_id)
     let token = await AsyncStorage.getItem(ACCESS_TOKEN)
     this.setState({accessToken: token})
-    let response = fetch(`https://groupie-server.herokuapp.com/getmatch/accept/${this.state.match_id}`, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
-      }
-    }).then((hi)=>{
-      console.log('comeback: ', hi)
-      console.log("User connected")
-      this.mutualConnectionMade(this.state.match_email);
-    });
-    this.getRandomUser();
+    try {
+      let response = await fetch(`http://localhost:3000/getmatch/accept/${this.state.match_id}`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        }
+      }).then((accept)=>{
+        console.log('comeback status code: ', accept.status, accept)
+        if (accept.status == 202){
+          console.log("User connected")
+          this.mutualConnectionMade(this.state.match_email);
+          this.getRandomUser();
+        } else {
+          this.getRandomUser();
+        }
 
+      });
+    } catch (error){
+      console.log(error)
+      throw error;
+    }
   }
 
   mutualConnectionMade(connectee){
