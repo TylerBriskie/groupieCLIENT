@@ -6,6 +6,7 @@ import {
   WebView,
   Text,
   StatusBar,
+  ActivityIndicator,
   Alert,
   Dimensions,
   Button,
@@ -40,9 +41,16 @@ class Browse extends Component {
       match_age: "",
       match_genres: [],
       errors: "",
+      webviewLoaded: false,
       button_text: "SKIP",
       button_destination: this.getRandomUser.bind(this)
     }
+  }
+
+  webviewLoadSuccess() {
+    this.setState({
+      webviewLoaded:true
+    })
   }
 
   navigateBack(){
@@ -57,9 +65,10 @@ class Browse extends Component {
 
   async getRandomUser(){
     try {
+      this.setState({webviewLoaded: false})
       let token = await AsyncStorage.getItem(ACCESS_TOKEN)
       this.setState({accessToken: token})
-      let response = await fetch(`http://localhost:3000/getmatch/random/content`, {
+      let response = await fetch(`https://groupie-server.herokuapp.com/getmatch/random/content`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -70,6 +79,10 @@ class Browse extends Component {
       let res = await response.json()
       console.log(res)
       if (response.status >= 200 && response.status < 300){
+        if(res.user_id == this.state.match_id){
+          this.setState({webviewLoaded: true})
+
+        }
           this.setState({
             errors: '',
             match_username: res.username,
@@ -114,7 +127,7 @@ class Browse extends Component {
     let token = await AsyncStorage.getItem(ACCESS_TOKEN)
     this.setState({accessToken: token})
     try {
-      fetch(`http://localhost:3000/getmatch/reject/${this.state.match_id}`, {
+      fetch(`https://groupie-server.herokuapp.com/getmatch/reject/${this.state.match_id}`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -137,7 +150,7 @@ class Browse extends Component {
     let token = await AsyncStorage.getItem(ACCESS_TOKEN)
     this.setState({accessToken: token})
     try {
-      let response = await fetch(`http://localhost:3000/getmatch/accept/${this.state.match_id}`, {
+      let response = await fetch(`https://groupie-server.herokuapp.com/getmatch/accept/${this.state.match_id}`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -150,8 +163,10 @@ class Browse extends Component {
           console.log("User connected")
           this.mutualConnectionMade(this.state.match_email);
           this.getRandomUser();
+
         } else {
           this.getRandomUser();
+
         }
 
       });
@@ -185,10 +200,23 @@ class Browse extends Component {
               source={require('../../../assets/left_arrow.png')}
             />
           </TouchableHighlight>
+          {
+            this.state.webviewLoaded ? null :
+            <View style={{justifyContent:'center', alignItems:'center'}}>
+              <ActivityIndicator
+                animating={this.state.animating}
+                style={[styles.centering, {height: 80}]}
+                size="large"
+              />
+              <Text style={styles.h2}>Finding user...</Text>
+          </View>
+        }
+        <View style={{opacity: this.state.webviewLoaded? 1:0}}>
           <View style={{height:230}}>
             <WebView
               source={{uri: `${this.state.match_content}`}}
               style={{height: 100}}
+              onLoad={()=>{this.webviewLoadSuccess()}}
               allowsInlineMediaPlayback= {true}
             />
           </View>
@@ -200,7 +228,7 @@ class Browse extends Component {
           <Genres genres={this.state.match_genres} />
 
           <Text style={styles.p}>{this.state.match_bio}</Text>
-
+        </View>
         </View>
         <View style={styles.bottom}>
           <TouchableHighlight onPress={this.rejectUser.bind(this)}>

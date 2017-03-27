@@ -27,16 +27,12 @@ class MyProfile extends Component {
 
         this.state = {
             username: "",
-            password: "",
             genres: [],
             bio: '',
             addGenre: "",
-            avatar_url: "",
             error: [],
             instruments: '',
-            accessToken: '',
             content_url: '',
-            secret: '',
         }
     }
 
@@ -49,7 +45,7 @@ class MyProfile extends Component {
     async removeToken(){
       try {
         await AsyncStorage.removeItem(ACCESS_TOKEN);
-        this.getToken();
+        this.navigate('splash');
       } catch(error) {
         console.log("Something went wrong...")
       }
@@ -58,7 +54,7 @@ class MyProfile extends Component {
     async updateBio(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('http://localhost:3000/myprofile/updateBio', {
+        let result = fetch('https://groupie-server.herokuapp.com/myprofile/updateBio', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -87,7 +83,7 @@ class MyProfile extends Component {
     async updateGenres(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('http://localhost:3000/myprofile/addGenre', {
+        let result = fetch('https://groupie-server.herokuapp.com/myprofile/addGenre', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -119,7 +115,7 @@ class MyProfile extends Component {
     async updateInstrument(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('http://localhost:3000/myprofile/updateInstrument', {
+        let result = fetch('https://groupie-server.herokuapp.com/myprofile/updateInstrument', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -147,7 +143,7 @@ class MyProfile extends Component {
     async removeGenre(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('http://localhost:3000/myprofile/removeGenre', {
+        let result = fetch('https://groupie-server.herokuapp.com/myprofile/removeGenre', {
           method: 'DELETE',
           headers: {
             'Accept': 'application/json',
@@ -175,7 +171,7 @@ class MyProfile extends Component {
     async updateContent(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('http://localhost:3000/myprofile/updateContent', {
+        let result = fetch('https://groupie-server.herokuapp.com/myprofile/updateContent', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -216,7 +212,7 @@ class MyProfile extends Component {
     async deleteProfileSure(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('http://localhost:3000/myprofile/deleteProfile', {
+        let result = fetch('https://groupie-server.herokuapp.com/myprofile/deleteProfile', {
           method: 'DELETE',
           headers: {
             'Accept': 'application/json',
@@ -236,12 +232,13 @@ class MyProfile extends Component {
     navigateBack() {
         this.props.navigator.pop();
     }
+
     async getUserInfo() {
       try {
           let token = await AsyncStorage.getItem(ACCESS_TOKEN)
           console.log("Token Is: ", token);
           this.setState({accessToken: token})
-          let result = await fetch('http://localhost:3000/myprofile', {
+          let result = await fetch('https://groupie-server.herokuapp.com/myprofile', {
               method: 'GET',
               headers: {
                   'Authorization': 'Bearer ' + token
@@ -297,6 +294,7 @@ class MyProfile extends Component {
                 <TextInput style={styles.smallInput}
                   onChangeText={(val)=> this.setState({content_url: val})}
                   multiline={true}
+                  autoCapitalize= 'none'
                   numberOfLines={2}
                   value={this.state.content_url} />
 
@@ -317,7 +315,7 @@ class MyProfile extends Component {
                 <TextInput style={styles.smallInput}
                   onChangeText={(val)=> this.setState({addGenre: val})}
                   clearTextOnFocus = {true}
-                  placeholder="Enter a new genre"
+                  placeholder="Enter new genres, separated by commas"
                   value={this.state.addGenre} />
 
                 <TouchableHighlight onPress={this.updateGenres.bind(this)} style={styles.buttonContainer}>
@@ -349,8 +347,12 @@ class MyProfile extends Component {
                   source={require('../../../assets/white_line.png')}
                 />
 
-                <TouchableHighlight onPress={this.navigate.bind(this, 'browse')} style={styles.backButton}>
+              <TouchableHighlight onPress={this.navigate.bind(this, 'browse')} style={styles.buttonContainer}>
                     <Text style={styles.buttonText}>Back to Browsing</Text>
+                </TouchableHighlight>
+
+                <TouchableHighlight onPress={this.removeToken.bind(this)} style={styles.backButton}>
+                    <Text style={styles.buttonText}>Log Out</Text>
                 </TouchableHighlight>
 
                 <TouchableHighlight onPress={this.deleteProfile.bind(this)} style={styles.redButton}>

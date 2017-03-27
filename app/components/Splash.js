@@ -6,9 +6,7 @@ import {
   Text,
   AsyncStorage,
   StatusBar,
-  Button,
   Image,
-  Alert,
   TouchableHighlight,
   View
 } from 'react-native';
