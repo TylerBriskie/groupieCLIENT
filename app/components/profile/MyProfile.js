@@ -8,6 +8,8 @@ import {
     Button,
     Image,
     WebView,
+    Switch,
+    Picker,
     AsyncStorage,
     ScrollView,
     TextInput,
@@ -16,9 +18,12 @@ import {
     View
 } from 'react-native';
 
+import CheckBox from 'react-native-check-box'
+
 import ProfileForm from './ProfileForm';
 import Splash from '../Splash'
 const ACCESS_TOKEN = 'access_token';
+const Item = Picker.Item;
 
 class MyProfile extends Component {
 
@@ -31,8 +36,12 @@ class MyProfile extends Component {
             bio: '',
             addGenre: "",
             error: [],
-            instruments: '',
+            instrument: '',
             content_url: '',
+            filterInstruments: [],
+            sortByGenre: false,
+            sortByInstrument: false,
+            filterDistance: 20
         }
     }
 
@@ -54,7 +63,7 @@ class MyProfile extends Component {
     async updateBio(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('https://groupie-server.herokuapp.com/myprofile/updateBio', {
+        let result = fetch('http://localhost:3000/myprofile/updateBio', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -79,11 +88,46 @@ class MyProfile extends Component {
         console.log("Error:", error)
       }
     }
+    async clearFilters(){
+      this.setState({
+        filterInstruments: [],
+        sortByInstrument: false
+      })
+      this.addFilters()
+    }
+    async addFilters(){
+      try {
+        let token = await AsyncStorage.getItem(ACCESS_TOKEN)
+        let result = fetch('http://localhost:3000/myprofile/filterInstrument', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({
+              filterInstruments: this.state.filterInstruments
+          })
+        })
+        // this.navigate('browse');
+        Alert.alert(
+          'Filtered Instruments Updated',
+          '',
+          [
+            {text: 'Right On', onPress: () => console.log('OK Pressed')},
+          ],
+          { cancelable: false }
+        )
+
+      }catch (error){
+        console.log("Error:", error)
+      }
+    }
 
     async updateGenres(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('https://groupie-server.herokuapp.com/myprofile/addGenre', {
+        let result = fetch('http://localhost:3000/myprofile/addGenre', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -115,7 +159,7 @@ class MyProfile extends Component {
     async updateInstrument(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('https://groupie-server.herokuapp.com/myprofile/updateInstrument', {
+        let result = fetch('http://localhost:3000/myprofile/updateInstrument', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -143,7 +187,7 @@ class MyProfile extends Component {
     async removeGenre(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('https://groupie-server.herokuapp.com/myprofile/removeGenre', {
+        let result = fetch('http://localhost:3000/myprofile/removeGenre', {
           method: 'DELETE',
           headers: {
             'Accept': 'application/json',
@@ -171,7 +215,7 @@ class MyProfile extends Component {
     async updateContent(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('https://groupie-server.herokuapp.com/myprofile/updateContent', {
+        let result = fetch('http://localhost:3000/myprofile/updateContent', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -212,7 +256,7 @@ class MyProfile extends Component {
     async deleteProfileSure(){
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
-        let result = fetch('https://groupie-server.herokuapp.com/myprofile/deleteProfile', {
+        let result = fetch('http://localhost:3000/myprofile/deleteProfile', {
           method: 'DELETE',
           headers: {
             'Accept': 'application/json',
@@ -238,7 +282,7 @@ class MyProfile extends Component {
           let token = await AsyncStorage.getItem(ACCESS_TOKEN)
           console.log("Token Is: ", token);
           this.setState({accessToken: token})
-          let result = await fetch('https://groupie-server.herokuapp.com/myprofile', {
+          let result = await fetch('http://localhost:3000/myprofile', {
               method: 'GET',
               headers: {
                   'Authorization': 'Bearer ' + token
@@ -246,14 +290,28 @@ class MyProfile extends Component {
           })
           let profile = await result.json()
           console.log(profile)
+          let inst_filters = []
+          for (var i = 0; i < profile.filtered_instruments.length; i++) {
+            if (profile.filtered_instruments[i] != null){
+              inst_filters.push(profile.filtered_instruments[i])
+            }
+          }
+          if (inst_filters.length>0){
+            this.setState({
+              sortByInstrument: true,
+              filterInstruments: inst_filters
+            })
+          }
           this.setState({
             username: profile.username,
             bio: profile.bio,
             instrument: profile.instrument,
             content_url: profile.content_url,
             genres: profile.genres,
+            filterInstruments: inst_filters,
             addGenre: '',
           })
+          console.log("State of instrument filters: ", this.state.filterInstruments)
       } catch (error) {
           console.log("Error: " + error)
       }
@@ -261,6 +319,30 @@ class MyProfile extends Component {
 
     componentDidMount() {
       this.getUserInfo()
+    }
+
+    onValueChange = (key: string, value: string) => {
+        const newState = {};
+        newState[key] = value;
+        this.setState(newState);
+        this.updateInstrument()
+      };
+
+    remove(array, element) {
+       return array.filter(function(el){return el !== element});
+    }
+
+    checkABox(data) {
+      var myValues = Object.values(this.state.filterInstruments)
+      console.log("My Values:", myValues);
+      if (this.state.filterInstruments.includes(data)){
+        var matchingKey = myValues.indexOf(data)
+        console.log("Key:", matchingKey)
+        this.state.filterInstruments.splice(matchingKey, 1)
+      } else {
+        this.state.filterInstruments.push(data)
+      }
+      console.log(this.state.filterInstruments)
     }
 
     render() {
@@ -306,6 +388,14 @@ class MyProfile extends Component {
                 style={styles.lineBreak}
                 source={require('../../../assets/white_line.png')}
               />
+              <View style={styles.row}>
+                <Text style={styles.h3}>Filter results by Genre?</Text>
+                <Switch
+                  onValueChange={(value) => this.setState({sortByGenre: value})}
+                  style={{marginBottom: 10}}
+                  value={this.state.sortByGenre} />
+              </View>
+              {this.state.sortByGenre ? <Text style={{fontSize: 12, marginBottom: 15, color: 'white'}}>Only displaying users that match at least one of your genre preferences</Text> : null}
 
                 <View style={styles.row}>
                   <Text style={styles.h3}>My Genres: </Text>
@@ -334,18 +424,195 @@ class MyProfile extends Component {
                   <Text style={styles.h3}>My Instrument: </Text>
                 </View>
 
-                <TextInput style={styles.smallInput}
-                  onChangeText={(val)=> this.setState({instrument: val})}
-                  value={this.state.instrument} />
+                <View style={styles.center}>
+                  <Picker
+                      style={styles.picker}
+                      itemStyle = {{color:'white'}}
+                      selectedValue={this.state.instrument}
+                      onValueChange={this.onValueChange.bind(this, 'instrument')}>
+                      <Item label="Guitar" value="Guitar" />
+                      <Item label="Bass" value="Bass" />
+                      <Item label="Drums" value="Drums" />
+                      <Item label="Percussion" value="Percussion" />
+                      <Item label="Keyboards" value="Keyboards" />
+                      <Item label="Horn" value="Horn" />
+                      <Item label="Banjo" value="Banjo" />
+                      <Item label="Mandolin" value="Mandolin" />
+                      <Item label="Violin" value="Violin" />
+                      <Item label="Singer" value="Singer" />
+                      <Item label="Rapper" value="Rapper" />
+                      <Item label="Other" value="Other" />
 
-                <TouchableHighlight onPress={this.updateInstrument.bind(this)} style={styles.buttonContainer}>
-                    <Text style={styles.buttonText}>Change Instrument</Text>
-                </TouchableHighlight>
+
+                    </Picker>
+                </View>
 
                 <Image
                   style={styles.lineBreak}
                   source={require('../../../assets/white_line.png')}
                 />
+
+                <View style={styles.row}>
+                  <Text style={styles.h3}>Filter results by Instrument?</Text>
+                  <Switch
+                    onValueChange={(value) => this.setState({sortByInstrument: value})}
+                    style={{marginBottom: 10}}
+                    value={this.state.sortByInstrument} />
+                </View>
+                {
+                  this.state.sortByInstrument ?
+                  <View style={{marginBottom: 30}}>
+                    <View style={styles.row}>
+                      <View style={styles.column}>
+                      <Text style={{color:'white'}}>Guitar </Text>
+                      <CheckBox
+                          style={{padding: 5}}
+                          onClick={()=>this.checkABox("Guitar")}
+                          isChecked = {this.state.filterInstruments.includes("Guitar")}
+                          checkedImage={<Image source={require('../../../assets/check_box_checked.png')}/>}
+                          unCheckedImage={<Image source={require('../../../assets/check_box_outline.png')}/>}
+
+                      />
+                    </View>
+                    <View style={styles.column}>
+                    <Text style={{color:'white'}}>Bass </Text>
+                      <CheckBox
+                          style={{padding: 5}}
+                          onClick={()=>this.checkABox("Bass")}
+                          isChecked = {this.state.filterInstruments.includes("Bass")}
+                          checkedImage={<Image source={require('../../../assets/check_box_checked.png')}/>}
+                          unCheckedImage={<Image source={require('../../../assets/check_box_outline.png')}/>}
+
+                      />
+                    </View>
+                    <View style={styles.column}>
+                    <Text style={{color:'white'}}>Drums </Text>
+                    <CheckBox
+                        style={{padding: 5}}
+                        isChecked = {this.state.filterInstruments.includes("Drums")}
+                        onClick={()=>this.checkABox("Drums")}
+                        checkedImage={<Image source={require('../../../assets/check_box_checked.png')}/>}
+                        unCheckedImage={<Image source={require('../../../assets/check_box_outline.png')}/>}
+
+                    />
+                  </View>
+                  <View style={styles.column}>
+                  <Text style={{color:'white'}}>Percussion </Text>
+                    <CheckBox
+                        style={{padding: 5}}
+                        isChecked = {this.state.filterInstruments.includes("Percussion")}
+                        onClick={()=>this.checkABox("Percussion")}
+                        checkedImage={<Image source={require('../../../assets/check_box_checked.png')}/>}
+                        unCheckedImage={<Image source={require('../../../assets/check_box_outline.png')}/>}
+
+                    />
+                  </View>
+                    </View>
+                    <View style={styles.row}>
+                      <View style={styles.column}>
+                      <Text style={{color:'white'}}>Keys </Text>
+                      <CheckBox
+                          style={{padding: 5}}
+                          onClick={()=>this.checkABox("Keyboards")}
+                          isChecked = {this.state.filterInstruments.includes("Keyboards")}
+                          checkedImage={<Image source={require('../../../assets/check_box_checked.png')}/>}
+                          unCheckedImage={<Image source={require('../../../assets/check_box_outline.png')}/>}
+
+                      />
+                    </View>
+                    <View style={styles.column}>
+                    <Text style={{color:'white'}}>Horn </Text>
+                      <CheckBox
+                          style={{padding: 5}}
+                          onClick={()=>this.checkABox("Horn")}
+                          isChecked = {this.state.filterInstruments.includes("Horn")}
+                          checkedImage={<Image source={require('../../../assets/check_box_checked.png')}/>}
+                          unCheckedImage={<Image source={require('../../../assets/check_box_outline.png')}/>}
+
+                      />
+                    </View>
+                    <View style={styles.column}>
+                    <Text style={{color:'white'}}>Banjo </Text>
+                    <CheckBox
+                        style={{padding: 5}}
+                        onClick={()=>this.checkABox("Banjo")}
+                        isChecked = {this.state.filterInstruments.includes("Banjo")}
+                        checkedImage={<Image source={require('../../../assets/check_box_checked.png')}/>}
+                        unCheckedImage={<Image source={require('../../../assets/check_box_outline.png')}/>}
+
+                    />
+                  </View>
+                  <View style={styles.column}>
+                  <Text style={{color:'white'}}>Mandolin </Text>
+                    <CheckBox
+                        style={{padding: 5}}
+                        isChecked = {this.state.filterInstruments.includes("Mandolin")}
+                        onClick={()=>this.checkABox("Mandolin")}
+                        checkedImage={<Image source={require('../../../assets/check_box_checked.png')}/>}
+                        unCheckedImage={<Image source={require('../../../assets/check_box_outline.png')}/>}
+
+                    />
+                  </View>
+                    </View>
+                    <View style={styles.row}>
+                      <View style={styles.column}>
+                      <Text style={{color:'white'}}>Violin </Text>
+                      <CheckBox
+                          style={{padding: 5}}
+                          onClick={()=>this.checkABox("Violin")}
+                          isChecked = {this.state.filterInstruments.includes("Violin")}
+                          checkedImage={<Image source={require('../../../assets/check_box_checked.png')}/>}
+                          unCheckedImage={<Image source={require('../../../assets/check_box_outline.png')}/>}
+
+                      />
+                    </View>
+                    <View style={styles.column}>
+                    <Text style={{color:'white'}}>Singer </Text>
+                      <CheckBox
+                          style={{padding: 5}}
+                          onClick={()=>this.checkABox("Singer")}
+                          isChecked = {this.state.filterInstruments.includes("Singer")}
+                          checkedImage={<Image source={require('../../../assets/check_box_checked.png')}/>}
+                          unCheckedImage={<Image source={require('../../../assets/check_box_outline.png')}/>}
+
+                      />
+                    </View>
+                    <View style={styles.column}>
+                    <Text style={{color:'white'}}>Rapper </Text>
+                    <CheckBox
+                        style={{padding: 5}}
+                        onClick={()=>this.checkABox("Rapper")}
+                        isChecked = {this.state.filterInstruments.includes("Rapper")}
+                        checkedImage={<Image source={require('../../../assets/check_box_checked.png')}/>}
+                        unCheckedImage={<Image source={require('../../../assets/check_box_outline.png')}/>}
+
+                    />
+                  </View>
+                  <View style={styles.column}>
+                  <Text style={{color:'white'}}>Other </Text>
+                    <CheckBox
+                        style={{padding: 5}}
+                        onClick={()=>this.checkABox("Other")}
+                        isChecked = {this.state.filterInstruments.includes("Other")}
+                        checkedImage={<Image source={require('../../../assets/check_box_checked.png')}/>}
+                        unCheckedImage={<Image source={require('../../../assets/check_box_outline.png')}/>}
+
+                    />
+                  </View>
+                    </View>
+                    <TouchableHighlight onPress={this.addFilters.bind(this)} style={styles.buttonContainer}>
+                          <Text style={styles.buttonText}>Save Instrument Filters</Text>
+                      </TouchableHighlight>
+                      <TouchableHighlight onPress={this.clearFilters.bind(this)} style={styles.backButton}>
+                            <Text style={styles.buttonText}>Clear Instrument Filters</Text>
+                        </TouchableHighlight>
+            </View>
+                : null
+              }
+                  <Image
+                    style={styles.lineBreak}
+                    source={require('../../../assets/white_line.png')}
+                  />
 
               <TouchableHighlight onPress={this.navigate.bind(this, 'browse')} style={styles.buttonContainer}>
                     <Text style={styles.buttonText}>Back to Browsing</Text>
@@ -383,9 +650,22 @@ const styles = StyleSheet.create({
         backgroundColor: '#0067DD',
         alignItems: 'stretch'
     },
+    center: {
+      alignItems: 'center'
+    },
+    picker: {
+      width:150,
+      color: 'white'
+    },
+    column: {
+      flexDirection: 'column',
+      justifyContent: 'flex-end',
+      alignItems: 'center'
+    },
     row: {
       flexDirection: 'row',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      alignItems: 'center'
     },
     h1: {
       fontSize: 24,

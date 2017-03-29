@@ -43,7 +43,7 @@ class Signup extends Component {
   async onRegisterPressed(){
     console.log("pressed register")
     try {
-      let response = await fetch('https://groupie-server.herokuapp.com/signup', {
+      let response = await fetch('http://localhost:3000/signup', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     backgroundColor: 'rgba(255,255,255,0.2)',
     paddingVertical: 15,
-    marginVertical: 30,
+    marginVertical: 10,
     marginHorizontal: 20,
     height: 40
   },

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Navigator,
-  TextInput, Text, StatusBar, 
-  AsyncStorage,
+  TextInput, Text, StatusBar,
+  AsyncStorage, Picker,
   KeyboardAvoidingView, TouchableHighlight} from 'react-native';
 
 const ACCESS_TOKEN = 'access_token';
+const Item = Picker.Item;
 
 class SignupForm extends Component {
   constructor() {
@@ -29,6 +30,33 @@ class SignupForm extends Component {
   navigateBack(){
     this.props.navigator.pop();
   }
+
+  onValueChange = (key: string, value: string) => {
+      const newState = {};
+      newState[key] = value;
+      this.setState(newState);
+      this.updateInstrument()
+    };
+
+    async updateInstrument(){
+      try {
+        let token = await AsyncStorage.getItem(ACCESS_TOKEN)
+        let result = fetch('http://localhost:3000/myprofile/updateInstrument', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({
+              instrument: this.state.instrument
+          })
+        })
+      }catch (error){
+        console.log("Error:", error)
+      }
+    }
+
   async storeToken(accessToken){
     try {
       await AsyncStorage.setItem(ACCESS_TOKEN, accessToken);
@@ -59,7 +87,7 @@ class SignupForm extends Component {
   async onRegisterPressed(){
     console.log("pressed register")
     try {
-      let response = await fetch('https://groupie-server.herokuapp.com/signup', {
+      let response = await fetch('http://localhost:3000/signup', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -145,14 +173,28 @@ class SignupForm extends Component {
             onSubmitEditing={()=> this.focusNextField('instrument')}
             style={styles.input}
           />
-          <TextInput
-            ref="instrument"
-            placeholder="Your Instrument"
-            autoCorrect={false}
-            onChangeText={(val)=> this.setState({instrument: val})}
-            returnKeyType="go"
-            style={styles.input}
-          />
+          <View style={styles.center}>
+            <Picker
+                style={styles.picker}
+                itemStyle = {{color:'white'}}
+                selectedValue={this.state.instrument}
+                onValueChange={this.onValueChange.bind(this, 'instrument')}>
+                <Item label="Guitar" value="Guitar" />
+                <Item label="Bass" value="Bass" />
+                <Item label="Drums" value="Drums" />
+                <Item label="Percussion" value="Percussion" />
+                <Item label="Keyboards" value="Keyboards" />
+                <Item label="Horn" value="Horn" />
+                <Item label="Banjo" value="Banjo" />
+                <Item label="Mandolin" value="Mandolin" />
+                <Item label="Violin" value="Violin" />
+                <Item label="Singer" value="Singer" />
+                <Item label="Rapper" value="Rapper" />
+                <Item label="Other" value="Other" />
+
+
+              </Picker>
+          </View>
 
         <TouchableHighlight style={styles.buttonContainer} onPress={this.onRegisterPressed.bind(this)}>
             <Text style={styles.buttonText}>Sign Up</Text>
@@ -181,7 +223,7 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     backgroundColor: 'rgba(255,255,255,0.2)',
-    marginBottom: 10,
+    marginBottom: 5,
     color: '#FFF',
     paddingHorizontal: 10
   },
@@ -195,9 +237,11 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     width: 150
   },
+  center: {
+    alignItems: 'center'
+  },
   picker: {
     width: 150,
-    height:75
   },
   buttonText: {
     textAlign: 'center',

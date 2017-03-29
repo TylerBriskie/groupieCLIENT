@@ -18,6 +18,24 @@ import GeolocationExample from './app/components/Location'
 
 export default class groupieCLIENT extends Component {
 
+  constructor(props) {
+      super(props);
+
+      this.state = {
+          username: "",
+          genres: [],
+          bio: '',
+          addGenre: "",
+          error: [],
+          instrument: '',
+          content_url: '',
+          filterInstruments: [],
+          sortByGenre: false,
+          sortByInstrument: false,
+          filterDistance: 50
+      }
+  }
+
 
   renderScene(route, navigator) {
     if (route.name == 'splash'){

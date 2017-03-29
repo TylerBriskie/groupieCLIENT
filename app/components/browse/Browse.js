@@ -16,8 +16,6 @@ import {
   View
 } from 'react-native';
 
-import YouTube from 'react-native-youtube'
-
 import ViewContainer from '../ViewContainer';
 import StatusBarBackground from '../StatusBarBackground';
 
@@ -41,6 +39,7 @@ class Browse extends Component {
       match_age: "",
       match_genres: [],
       errors: "",
+      sortByGenre: false,
       webviewLoaded: false,
       button_text: "SKIP",
       button_destination: this.getRandomUser.bind(this)
@@ -65,10 +64,11 @@ class Browse extends Component {
 
   async getRandomUser(){
     try {
+      console.log(this.state.sortByGenre)
       this.setState({webviewLoaded: false})
       let token = await AsyncStorage.getItem(ACCESS_TOKEN)
       this.setState({accessToken: token})
-      let response = await fetch(`https://groupie-server.herokuapp.com/getmatch/random/content`, {
+      let response = await fetch(`http://localhost:3000/getmatch/random/content`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -127,7 +127,7 @@ class Browse extends Component {
     let token = await AsyncStorage.getItem(ACCESS_TOKEN)
     this.setState({accessToken: token})
     try {
-      fetch(`https://groupie-server.herokuapp.com/getmatch/reject/${this.state.match_id}`, {
+      fetch(`http://localhost:3000/getmatch/reject/${this.state.match_id}`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -150,7 +150,7 @@ class Browse extends Component {
     let token = await AsyncStorage.getItem(ACCESS_TOKEN)
     this.setState({accessToken: token})
     try {
-      let response = await fetch(`https://groupie-server.herokuapp.com/getmatch/accept/${this.state.match_id}`, {
+      let response = await fetch(`http://localhost:3000/getmatch/accept/${this.state.match_id}`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
