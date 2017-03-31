@@ -39,7 +39,8 @@ class Browse extends Component {
       match_age: "",
       match_genres: [],
       errors: "",
-      sortByGenre: false,
+      sortByGenre: true,
+      sortByInstrument: true,
       webviewLoaded: false,
       button_text: "SKIP",
       button_destination: this.getRandomUser.bind(this)
@@ -64,11 +65,12 @@ class Browse extends Component {
 
   async getRandomUser(){
     try {
+      let URL = 'http://localhost:3000/getmatch/random/content'
       console.log(this.state.sortByGenre)
       this.setState({webviewLoaded: false})
       let token = await AsyncStorage.getItem(ACCESS_TOKEN)
       this.setState({accessToken: token})
-      let response = await fetch(`http://localhost:3000/getmatch/random/content`, {
+      let response = await fetch(`http://localhost:3000/getmatch/random/content?sortByInstrument=${this.state.sortByInstrument}&sortByGenre=${this.state.sortByGenre}`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',

@@ -201,7 +201,7 @@ class MyProfile extends Component {
           'Add some more or your content won\'t be visible to other users',
           [
             {text: 'Right On', onPress: () =>
-              this.getUserInfo()
+              this.setState({genres: []})
             },
           ],
           { cancelable: false }
@@ -291,17 +291,19 @@ class MyProfile extends Component {
           let profile = await result.json()
           console.log(profile)
           let inst_filters = []
-          for (var i = 0; i < profile.filtered_instruments.length; i++) {
-            if (profile.filtered_instruments[i] != null){
-              inst_filters.push(profile.filtered_instruments[i])
+          if (profile.filtered_instruments != null){
+            for (var i = 0; i < profile.filtered_instruments.length; i++) {
+                inst_filters.push(profile.filtered_instruments[i])
             }
           }
-          if (inst_filters.length>0){
+
+          if (inst_filters.length>0 && inst_filters[0] != null){
             this.setState({
               sortByInstrument: true,
               filterInstruments: inst_filters
             })
           }
+          // if (profile.genre)
           this.setState({
             username: profile.username,
             bio: profile.bio,
@@ -399,7 +401,11 @@ class MyProfile extends Component {
 
                 <View style={styles.row}>
                   <Text style={styles.h3}>My Genres: </Text>
-                  <Genres genres={this.state.genres} />
+                  {this.state.genres.length>0 ?
+                    <Genres genres={this.state.genres} /> :
+                    <Text style={styles.h3}>none...</Text>
+                  }
+
                 </View>
 
                 <TextInput style={styles.smallInput}
@@ -632,11 +638,15 @@ class MyProfile extends Component {
 }
 
 const Genres = (props) => {
-  return (
-    <View>
-      {props.genres.map((genre, i) => <Text key={i} style = {styles.h3}>{genre}</Text>)}
-    </View>
-  )
+
+
+      return (
+        <View>
+          {props.genres.map((genre, i) => <Text key={i} style = {styles.h3}>{genre}</Text>)}
+        </View>
+      )
+
+
 }
 
 Genres.defaultProps ={
@@ -654,8 +664,7 @@ const styles = StyleSheet.create({
       alignItems: 'center'
     },
     picker: {
-      width:150,
-      color: 'white'
+      width:150
     },
     column: {
       flexDirection: 'column',
