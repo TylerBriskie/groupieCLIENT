@@ -123,6 +123,8 @@ class Browse extends Component {
 
   }
 
+// thumbs down
+
   async rejectUser(){
     console.log("Rejected!!!");
     console.log(this.state.match_id)
@@ -147,6 +149,8 @@ class Browse extends Component {
 
   }
 
+  // thumbs up
+  
   async connectUser(){
     console.log(this.state.match_id)
     let token = await AsyncStorage.getItem(ACCESS_TOKEN)
