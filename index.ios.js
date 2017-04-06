@@ -36,21 +36,14 @@ export default class groupieCLIENT extends Component {
       }
   }
 
-  filterInstrumentsOn(){
-    this.setState({sortByInstrument: true})
+  filterInstrumentsToggle(value){
+    this.setState({sortByInstrument: value})
   }
 
-  filterInstrumentsOff(){
-    this.setState({sortByInstrument: false})
+  filterGenreToggle(value){
+    this.setState({sortByGenre: value})
   }
 
-  filterGenreOn(){
-    this.setState({sortByGenre: true})
-  }
-
-  filterGenreOff(){
-    this.setState({sortByGenre: false})
-  }
 
   renderScene(route, navigator) {
     if (route.name == 'splash'){
@@ -63,10 +56,16 @@ export default class groupieCLIENT extends Component {
       return <Login {...route.passProps} route={route} navigator={navigator} />
     }
     if (route.name == 'browse'){
-      return <Browse {...route.passProps} route={route} navigator={navigator} />
+      return <Browse {...route.passProps}
+        setInstrumentSort={this.props.sortByInstrument}
+        setGenreSort={this.props.sortByGenre}
+        route={route} navigator={navigator} />
     }
     if (route.name == 'myprofile'){
-      return <MyProfile {...route.passProps} route={route} navigator={navigator} />
+      return <MyProfile {...route.passProps} route={route} navigator={navigator}
+        setInstrumentSort={this.filterInstrumentsToggle}
+        setGenreSort={this.filterGenreToggle}
+      />
     }
     if (route.name == 'loginform'){
       return <LoginForm {...route.passProps} route={route} navigator={navigator} />

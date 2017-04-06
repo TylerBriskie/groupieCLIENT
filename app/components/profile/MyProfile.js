@@ -39,8 +39,8 @@ class MyProfile extends Component {
             instrument: '',
             content_url: '',
             filterInstruments: [],
-            sortByGenre: false,
-            sortByInstrument: false,
+            sortByGenre: null,
+            sortByInstrument: null,
             filterDistance: 20
         }
     }
