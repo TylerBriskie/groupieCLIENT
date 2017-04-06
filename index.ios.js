@@ -30,14 +30,15 @@ export default class groupieCLIENT extends Component {
           instrument: '',
           content_url: '',
           filterInstruments: [],
-          sortByGenre: false,
-          sortByInstrument: false,
+          sortByGenre: null,
+          sortByInstrument: null,
           filterDistance: 50
       }
   }
 
   filterInstrumentsToggle(value){
     this.setState({sortByInstrument: value})
+    console.log("State of Instrument Filter: ", this.state.sortByInstrument)
   }
 
   filterGenreToggle(value){
@@ -57,14 +58,16 @@ export default class groupieCLIENT extends Component {
     }
     if (route.name == 'browse'){
       return <Browse {...route.passProps}
-        setInstrumentSort={this.props.sortByInstrument}
-        setGenreSort={this.props.sortByGenre}
+        setInstrumentSort={this.state.sortByInstrument}
+        setGenreSort={this.state.sortByGenre}
         route={route} navigator={navigator} />
     }
     if (route.name == 'myprofile'){
       return <MyProfile {...route.passProps} route={route} navigator={navigator}
-        setInstrumentSort={this.filterInstrumentsToggle}
-        setGenreSort={this.filterGenreToggle}
+        setInstrumentSort={this.filterInstrumentsToggle.bind(this)}
+        setGenreSort={this.filterGenreToggle.bind(this)}
+        instrumentSort={this.state.sortByInstrument}
+        genreSort={this.state.sortByGenre}
       />
     }
     if (route.name == 'loginform'){

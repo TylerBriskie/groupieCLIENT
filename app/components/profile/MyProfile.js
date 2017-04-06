@@ -39,8 +39,8 @@ class MyProfile extends Component {
             instrument: '',
             content_url: '',
             filterInstruments: [],
-            sortByGenre: null,
-            sortByInstrument: null,
+            sortByGenre: this.props.genreSort,
+            sortByInstrument: this.props.instrumentSort,
             filterDistance: 20
         }
     }
@@ -323,11 +323,23 @@ class MyProfile extends Component {
       this.getUserInfo()
     }
 
+    genreSort(value) {
+      this.props.setGenreSort(value)
+      this.setState({sortByGenre: value})
+    }
+
+    instrumentSort(value) {
+      this.props.setInstrumentSort(value)
+      this.setState({sortByInstrument: value})
+      console.log("Sorting By Instrument?: ", this.state.sortByInstrument)
+    }
+
     onValueChange = (key: string, value: string) => {
         const newState = {};
         newState[key] = value;
         this.setState(newState);
         this.updateInstrument()
+        console.log("Sorting By Instrument?: ", this.state.sortByInstrument)
       };
 
     remove(array, element) {
@@ -393,7 +405,7 @@ class MyProfile extends Component {
               <View style={styles.row}>
                 <Text style={styles.h3}>Filter results by Genre?</Text>
                 <Switch
-                  onValueChange={(value) => this.setState({sortByGenre: value})}
+                  onValueChange={(value) => this.genreSort(value)}
                   style={{marginBottom: 10}}
                   value={this.state.sortByGenre} />
               </View>
@@ -461,7 +473,7 @@ class MyProfile extends Component {
                 <View style={styles.row}>
                   <Text style={styles.h3}>Filter results by Instrument?</Text>
                   <Switch
-                    onValueChange={(value) => this.setState({sortByInstrument: value})}
+                    onValueChange={(value) => this.instrumentSort(value)}
                     style={{marginBottom: 10}}
                     value={this.state.sortByInstrument} />
                 </View>

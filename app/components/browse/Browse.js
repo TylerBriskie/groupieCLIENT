@@ -39,8 +39,8 @@ class Browse extends Component {
       match_age: "",
       match_genres: [],
       errors: "",
-      sortByGenre: false,
-      sortByInstrument: false,
+      sortByGenre: null,
+      sortByInstrument: null,
       webviewLoaded: false,
       button_text: "SKIP",
       button_destination: this.getRandomUser.bind(this)
@@ -67,6 +67,7 @@ class Browse extends Component {
     try {
       let URL = 'http://localhost:3000/getmatch/random/content'
       console.log(this.state.sortByGenre)
+      console.log("sorting by instrument?", this.state.sortByInstrument)
       this.setState({webviewLoaded: false})
       let token = await AsyncStorage.getItem(ACCESS_TOKEN)
       this.setState({accessToken: token})
@@ -120,6 +121,11 @@ class Browse extends Component {
 
   componentDidMount(){
     this.getRandomUser()
+    this.setState({sortByInstrument: this.props.setInstrumentSort})
+    this.setState({sortByGenre: this.props.setGenreSort})
+    console.log("State of instrument Filter: ", this.state.sortByInstrument)
+    console.log("State of genre Filter: ", this.state.sortByGenre)
+
 
   }
 
