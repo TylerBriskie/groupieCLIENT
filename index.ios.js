@@ -36,6 +36,21 @@ export default class groupieCLIENT extends Component {
       }
   }
 
+  filterInstrumentsOn(){
+    this.setState({sortByInstrument: true})
+  }
+
+  filterInstrumentsOff(){
+    this.setState({sortByInstrument: false})
+  }
+
+  filterGenreOn(){
+    this.setState({sortByGenre: true})
+  }
+
+  filterGenreOff(){
+    this.setState({sortByGenre: false})
+  }
 
   renderScene(route, navigator) {
     if (route.name == 'splash'){

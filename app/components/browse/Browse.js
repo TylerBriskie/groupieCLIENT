@@ -39,8 +39,8 @@ class Browse extends Component {
       match_age: "",
       match_genres: [],
       errors: "",
-      sortByGenre: true,
-      sortByInstrument: true,
+      sortByGenre: false,
+      sortByInstrument: false,
       webviewLoaded: false,
       button_text: "SKIP",
       button_destination: this.getRandomUser.bind(this)
@@ -150,7 +150,7 @@ class Browse extends Component {
   }
 
   // thumbs up
-  
+
   async connectUser(){
     console.log(this.state.match_id)
     let token = await AsyncStorage.getItem(ACCESS_TOKEN)
