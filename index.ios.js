@@ -30,8 +30,8 @@ export default class groupieCLIENT extends Component {
           instrument: '',
           content_url: '',
           filterInstruments: [],
-          sortByGenre: null,
-          sortByInstrument: null,
+          sortByGenre: false,
+          sortByInstrument: false,
           filterDistance: 50
       }
   }
@@ -58,8 +58,10 @@ export default class groupieCLIENT extends Component {
     }
     if (route.name == 'browse'){
       return <Browse {...route.passProps}
-        setInstrumentSort={this.state.sortByInstrument}
-        setGenreSort={this.state.sortByGenre}
+        setInstrumentSort={this.filterInstrumentsToggle.bind(this)}
+        setGenreSort={this.filterGenreToggle.bind(this)}
+        instrumentSort={this.state.sortByInstrument}
+        genreSort={this.state.sortByGenre}
         route={route} navigator={navigator} />
     }
     if (route.name == 'myprofile'){

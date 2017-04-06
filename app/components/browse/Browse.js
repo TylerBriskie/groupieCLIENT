@@ -6,6 +6,7 @@ import {
   WebView,
   Text,
   StatusBar,
+  Switch,
   ActivityIndicator,
   Alert,
   Dimensions,
@@ -66,7 +67,7 @@ class Browse extends Component {
   async getRandomUser(){
     try {
       let URL = 'http://localhost:3000/getmatch/random/content'
-      console.log(this.state.sortByGenre)
+      console.log("sorting by genre?", this.state.sortByGenre)
       console.log("sorting by instrument?", this.state.sortByInstrument)
       this.setState({webviewLoaded: false})
       let token = await AsyncStorage.getItem(ACCESS_TOKEN)
@@ -119,10 +120,21 @@ class Browse extends Component {
     }
   }
 
+  genreSort(value) {
+    this.props.setGenreSort(value)
+    this.setState({sortByGenre: value})
+  }
+
+  instrumentSort(value) {
+    this.props.setInstrumentSort(value)
+    this.setState({sortByInstrument: value})
+    console.log("Sorting By Instrument?: ", this.state.sortByInstrument)
+  }
+
   componentDidMount(){
     this.getRandomUser()
-    this.setState({sortByInstrument: this.props.setInstrumentSort})
-    this.setState({sortByGenre: this.props.setGenreSort})
+    this.setState({sortByInstrument: this.props.instrumentSort})
+    this.setState({sortByGenre: this.props.genreSort})
     console.log("State of instrument Filter: ", this.state.sortByInstrument)
     console.log("State of genre Filter: ", this.state.sortByGenre)
 
@@ -206,12 +218,14 @@ class Browse extends Component {
 
       <View style={styles.browse}>
         <StatusBarBackground />
+
           <TouchableHighlight onPress={this.navigate.bind(this, 'splash')}>
             <Image
               style={styles.backArrow}
               source={require('../../../assets/left_arrow.png')}
             />
           </TouchableHighlight>
+
           {
             this.state.webviewLoaded ? null :
             <View style={{justifyContent:'center', alignItems:'center'}}>
@@ -241,7 +255,9 @@ class Browse extends Component {
 
           <Text style={styles.p}>{this.state.match_bio}</Text>
         </View>
+
         </View>
+
         <View style={styles.bottom}>
           <TouchableHighlight onPress={this.rejectUser.bind(this)}>
             <Image
@@ -280,15 +296,20 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     marginHorizontal: 10
   },
+  switches: {
+    alignItems: 'stretch',
+    marginHorizontal: 15
+  },
   row: {
     flexDirection: "row",
     justifyContent: 'space-between',
-    marginBottom: 15
+    alignItems: 'center',
+    marginBottom: 10
   },
   bottom:{
     flexDirection: "row",
     justifyContent: "space-around",
-    marginBottom: 25,
+    marginBottom: 20,
   },
   logoContainer: {
     alignItems: 'center'
@@ -302,7 +323,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     backgroundColor: 'rgba(255,255,255,0.2)',
     paddingVertical: 15,
-    marginVertical: 30,
+    marginVertical: 25,
     marginHorizontal: 20,
     height: 40
   },
