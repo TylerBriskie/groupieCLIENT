@@ -32,8 +32,13 @@ export default class groupieCLIENT extends Component {
           filterInstruments: [],
           sortByGenre: false,
           sortByInstrument: false,
-          filterDistance: 50
+          filterDistance: 300
       }
+  }
+
+  setDistanceFilter(value){
+    this.setState({filterDistance: value})
+    console.log("Setting Distance filter to: ", this.state.filterDistance)
   }
 
   filterInstrumentsToggle(value){
@@ -60,16 +65,20 @@ export default class groupieCLIENT extends Component {
       return <Browse {...route.passProps}
         setInstrumentSort={this.filterInstrumentsToggle.bind(this)}
         setGenreSort={this.filterGenreToggle.bind(this)}
+        setFilterDistance = {this.setDistanceFilter.bind(this)}
         instrumentSort={this.state.sortByInstrument}
         genreSort={this.state.sortByGenre}
+        filterDistance = {this.state.filterDistance}
         route={route} navigator={navigator} />
     }
     if (route.name == 'myprofile'){
       return <MyProfile {...route.passProps} route={route} navigator={navigator}
         setInstrumentSort={this.filterInstrumentsToggle.bind(this)}
         setGenreSort={this.filterGenreToggle.bind(this)}
+        setFilterDistance = {this.setDistanceFilter.bind(this)}
         instrumentSort={this.state.sortByInstrument}
         genreSort={this.state.sortByGenre}
+        filterDistance = {this.state.filterDistance}
       />
     }
     if (route.name == 'loginform'){

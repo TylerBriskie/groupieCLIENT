@@ -18,8 +18,12 @@ class SignupForm extends Component {
       password: "",
       password_confirm: "",
       errors: [],
+      userLat: null,
+      userLong: null
     }
   }
+
+  watchID: ?number = null;
 
   navigate(routeName) {
       this.props.navigator.push({
@@ -37,6 +41,27 @@ class SignupForm extends Component {
       this.setState(newState);
       this.updateInstrument()
     };
+
+    componentDidMount(){
+      navigator.geolocation.getCurrentPosition(
+      (position) => {
+        var userPosition = JSON.stringify(position);
+        this.setState({
+          userLat: position.coords.latitude,
+          userLong: position.coords.longitude
+        });
+      },
+      (error) => alert(JSON.stringify(error)),
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+    );
+    this.watchID = navigator.geolocation.watchPosition((position) => {
+      var userLong = JSON.stringify(position);
+      this.setState({
+        userLat: position.coords.latitude,
+        userLong: position.coords.longitude
+      });
+    });
+    }
 
     async updateInstrument(){
       try {
@@ -99,7 +124,9 @@ class SignupForm extends Component {
             email: this.state.email,
             password: this.state.password,
             password_confirm: this.state.password_confirm,
-            instrument: this.state.instrument
+            instrument: this.state.instrument,
+            lat: this.state.userLat,
+            long: this.state.userLong
 
         })
       });
@@ -123,6 +150,10 @@ class SignupForm extends Component {
 
       this.setState({errors: formErrors});
     }
+  }
+
+  clearErrors(){
+    this.setState({errors: []})
   }
 
   focusNextField = (nextField) => {
@@ -173,33 +204,54 @@ class SignupForm extends Component {
             onSubmitEditing={()=> this.focusNextField('instrument')}
             style={styles.input}
           />
-          <View style={styles.center}>
-            <Picker
-                style={styles.picker}
-                itemStyle = {{color:'white'}}
-                selectedValue={this.state.instrument}
-                onValueChange={this.onValueChange.bind(this, 'instrument')}>
-                <Item label="Guitar" value="Guitar" />
-                <Item label="Bass" value="Bass" />
-                <Item label="Drums" value="Drums" />
-                <Item label="Percussion" value="Percussion" />
-                <Item label="Keyboards" value="Keyboards" />
-                <Item label="Horn" value="Horn" />
-                <Item label="Banjo" value="Banjo" />
-                <Item label="Mandolin" value="Mandolin" />
-                <Item label="Violin" value="Violin" />
-                <Item label="Singer" value="Singer" />
-                <Item label="Rapper" value="Rapper" />
-                <Item label="Other" value="Other" />
 
 
-              </Picker>
-          </View>
+            {
+              (this.state.errors.length>0) ?
+              null :
+              <View style={styles.center}>
+                <Text style={styles.title}>Initial position: {this.state.userLat}</Text>
 
-        <TouchableHighlight style={styles.buttonContainer} onPress={this.onRegisterPressed.bind(this)}>
-            <Text style={styles.buttonText}>Sign Up</Text>
-          </TouchableHighlight>
+                <Text style={{color: "#FFF", fontSize: 20}}>
+                  Choose Your Instrument:
+                </Text>
+                <Picker
+                  style={styles.picker}
+                  itemStyle = {{color:'white'}}
+                  selectedValue={this.state.instrument}
+                  onValueChange={this.onValueChange.bind(this, 'instrument')}>
+                  <Item label="Guitar" value="Guitar" />
+                  <Item label="Bass" value="Bass" />
+                  <Item label="Drums" value="Drums" />
+                  <Item label="Percussion" value="Percussion" />
+                  <Item label="Keyboards" value="Keyboards" />
+                  <Item label="Horn" value="Horn" />
+                  <Item label="Banjo" value="Banjo" />
+                  <Item label="Mandolin" value="Mandolin" />
+                  <Item label="Violin" value="Violin" />
+                  <Item label="Singer" value="Singer" />
+                  <Item label="Rapper" value="Rapper" />
+                  <Item label="Other" value="Other" />
+
+
+                </Picker>
+                <TouchableHighlight style={styles.buttonContainer} onPress={this.onRegisterPressed.bind(this)}>
+                    <Text style={styles.buttonText}>Sign Up</Text>
+                  </TouchableHighlight>
+              </View>
+            }
+
+
+
+
           <Errors errors={this.state.errors} />
+          {this.state.errors.length===0 ?
+            null :
+            <TouchableHighlight style={styles.buttonContainer} onPress={this.clearErrors.bind(this)}>
+                <Text style={styles.buttonText}>OK!</Text>
+              </TouchableHighlight>
+
+          }
 
       </View>
 

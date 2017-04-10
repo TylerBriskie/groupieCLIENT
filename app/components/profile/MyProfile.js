@@ -9,6 +9,7 @@ import {
     Image,
     WebView,
     Switch,
+    Slider,
     Picker,
     AsyncStorage,
     ScrollView,
@@ -25,12 +26,39 @@ import Splash from '../Splash'
 const ACCESS_TOKEN = 'access_token';
 const Item = Picker.Item;
 
+class AnSlider extends React.Component {
+  static defaultProps = {
+    value: 1,
+  };
+
+  state = {
+    value: this.props.value,
+  };
+
+  render() {
+    return (
+      <View>
+        <Text style={styles.h3} >
+          {this.state.value && +this.state.value.toFixed(0)} {
+            this.state.value == 1 ? "Mile" : "Miles"
+          }
+        </Text>
+        <Slider
+          {...this.props}
+          onValueChange={(value) => this.setState({value: value})} />
+      </View>
+    );
+  }
+}
+
+
 class MyProfile extends Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
+            loaded: false,
             username: "",
             genres: [],
             bio: '',
@@ -41,7 +69,7 @@ class MyProfile extends Component {
             filterInstruments: [],
             sortByGenre: this.props.genreSort,
             sortByInstrument: this.props.instrumentSort,
-            filterDistance: 20
+            filterDistance: this.props.filterDistance
         }
     }
 
@@ -291,19 +319,21 @@ class MyProfile extends Component {
           let profile = await result.json()
           console.log(profile)
           let inst_filters = []
-          if (profile.filtered_instruments != null){
+          // if (profile.filtered_instruments != null){
             for (var i = 0; i < profile.filtered_instruments.length; i++) {
+              if (profile.filtered_instruments[i] != null){
                 inst_filters.push(profile.filtered_instruments[i])
+              }
             }
-          }
+          // }
 
-          if (inst_filters.length>0 && inst_filters[0] != null){
+          if (this.props.instrumentSort){
             this.setState({
               sortByInstrument: true,
               filterInstruments: inst_filters
             })
           }
-          // if (profile.genre)
+          console.log("instrument filters from load: ", inst_filters)
           this.setState({
             username: profile.username,
             bio: profile.bio,
@@ -319,8 +349,13 @@ class MyProfile extends Component {
       }
     }
 
-    componentDidMount() {
-      this.getUserInfo()
+    async componentDidMount() {
+        this.getUserInfo()
+    }
+
+    distanceFilter(value){
+      this.props.setFilterDistance(value)
+      this.setState({filterDistance: value})
     }
 
     genreSort(value) {
@@ -631,6 +666,29 @@ class MyProfile extends Component {
                     style={styles.lineBreak}
                     source={require('../../../assets/white_line.png')}
                   />
+                <View>
+                  <Text style={styles.h3}>Maximum Distance for Matches?</Text>
+                    <View>
+                      <Text style={styles.h3} >
+                        {this.state.filterDistance == 300 ? "Unlimited" : this.state.filterDistance} {
+                          this.state.filterDistance == 1 ? "Mile" : "Miles"
+                        }
+                      </Text>
+                      <Slider
+                        value = {this.state.filterDistance}
+                        minimumValue = {1}
+                        maximumValue = {300}
+                        step = {1}
+                        {...this.props}
+                        onValueChange={(value) => this.distanceFilter(value)} />
+                    </View>
+
+
+                </View>
+                  <Image
+                    style={styles.lineBreak}
+                    source={require('../../../assets/white_line.png')}
+                  />
 
               <TouchableHighlight onPress={this.navigate.bind(this, 'browse')} style={styles.buttonContainer}>
                     <Text style={styles.buttonText}>Back to Browsing</Text>
@@ -728,7 +786,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,155,85,1)',
         paddingVertical: 10,
         marginTop: 15,
-        marginBottom: 25,
+        marginBottom: 15,
         height: 40
     },
     backButton:{

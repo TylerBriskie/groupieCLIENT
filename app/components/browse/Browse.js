@@ -37,13 +37,16 @@ class Browse extends Component {
       match_email: "",
       match_content: "",
       match_bio: "",
-      match_age: "",
+      match_lat: null,
+      match_long: null,
       match_genres: [],
+      match_distance: null,
       errors: "",
       sortByGenre: null,
       sortByInstrument: null,
       webviewLoaded: false,
       button_text: "SKIP",
+      filterDistance: this.props.filterDistance,
       button_destination: this.getRandomUser.bind(this)
     }
   }
@@ -72,7 +75,7 @@ class Browse extends Component {
       this.setState({webviewLoaded: false})
       let token = await AsyncStorage.getItem(ACCESS_TOKEN)
       this.setState({accessToken: token})
-      let response = await fetch(`http://localhost:3000/getmatch/random/content?sortByInstrument=${this.state.sortByInstrument}&sortByGenre=${this.state.sortByGenre}`, {
+      let response = await fetch(`http://localhost:3000/getmatch/random/content?sortByInstrument=${this.state.sortByInstrument}&sortByGenre=${this.state.sortByGenre}&sortDistance=${this.state.filterDistance}`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -94,8 +97,8 @@ class Browse extends Component {
             match_content: res.content,
             match_instrument: res.instrument,
             match_bio: res.bio,
-            match_age: res.age,
             match_email: res.email,
+            match_distance: res.distance,
             match_genres: res.genres,
           });
 
@@ -103,7 +106,6 @@ class Browse extends Component {
         this.setState({
           match_username: '',
           match_bio: "no users found...get back to practice and try again later!",
-          match_age: '',
           match_genres: [],
           match_id: null,
           match_instrument: '',
@@ -133,6 +135,7 @@ class Browse extends Component {
 
   componentDidMount(){
     this.getRandomUser()
+    this.setState({filterDistance: this.props.filterDistance})
     this.setState({sortByInstrument: this.props.instrumentSort})
     this.setState({sortByGenre: this.props.genreSort})
     console.log("State of instrument Filter: ", this.state.sortByInstrument)
@@ -252,7 +255,8 @@ class Browse extends Component {
           <Text style={styles.h2}>{this.state.match_instrument}</Text>
         </View>
           <Genres genres={this.state.match_genres} />
-
+          <StatusBarBackground />
+          <Text style={styles.h3}>Distance: {this.state.match_distance} {(this.state.match_distance ==1? "Mile" : "Miles")}</Text>
           <Text style={styles.p}>{this.state.match_bio}</Text>
         </View>
 

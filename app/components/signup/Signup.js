@@ -95,14 +95,6 @@ class Signup extends Component {
   }
 }
 
-const Errors = (props) => {
-  return (
-    <View>
-      {props.errors.map((error, i) => <Text key={i} style = {styles.error}>{error}</Text>)}
-    </View>
-  )
-}
-
 const styles = StyleSheet.create({
 
   container: {
@@ -121,7 +113,9 @@ const styles = StyleSheet.create({
   },
   signup: {
     flex: 1,
-    backgroundColor: '#0067DD'
+    backgroundColor: '#0067DD',
+    flexDirection:'column',
+    justifyContent: 'space-around'
   },
   logoContainer: {
     alignItems: 'center'
@@ -131,7 +125,7 @@ const styles = StyleSheet.create({
     height:75,
   },
   error: {
-    paddingVertical:10,
+    paddingVertical:3,
     color: "#FFF",
     textAlign: 'center'
   },
