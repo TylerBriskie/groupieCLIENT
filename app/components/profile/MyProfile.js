@@ -344,12 +344,15 @@ class MyProfile extends Component {
             addGenre: '',
           })
           console.log("State of instrument filters: ", this.state.filterInstruments)
+          this.setState({
+            loaded: true
+          })
       } catch (error) {
           console.log("Error: " + error)
       }
     }
 
-    async componentDidMount() {
+    componentWillMount() {
         this.getUserInfo()
     }
 
@@ -513,7 +516,7 @@ class MyProfile extends Component {
                     value={this.state.sortByInstrument} />
                 </View>
                 {
-                  this.state.sortByInstrument ?
+                  this.state.sortByInstrument && this.state.loaded ?
                   <View style={{marginBottom: 30}}>
                     <View style={styles.row}>
                       <View style={styles.column}>
