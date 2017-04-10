@@ -63,6 +63,7 @@ class Signup extends Component {
       console.log(response)
       if (response.status >= 200 && response.status < 300){
           console.log("res is: ", res)
+          this.props.loginFunction(true);
           this.props.navigate('myprofile');
       } else {
         let errors = res;
@@ -86,7 +87,9 @@ class Signup extends Component {
             source={require("../../../assets/GroupieLogo.png")}
           />
         </View>
-        <SignupForm navigate={this.navigate.bind(this)} />
+        <SignupForm navigate={this.navigate.bind(this)}
+          loginFunction = {this.props.loginFunction.bind(this)}
+          />
         <TouchableHighlight onPress={this.navigateBack.bind(this)} style={styles.buttonContainer}>
           <Text style={styles.buttonText}>Back</Text>
         </TouchableHighlight>

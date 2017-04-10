@@ -77,6 +77,7 @@ class LoginForm extends Component {
           this.setState({logged_in: true})
           this.setState({loggin_button_text: "log out"})
           console.log("Logging dat token:",  accessToken);
+          this.props.loginFunction(true)
           this.props.navigate('myprofile');
       } else {
         let error = res;

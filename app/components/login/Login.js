@@ -35,7 +35,9 @@ class Login extends Component {
           />
         </View>
         <View>
-          <LoginForm navigate={this.navigate.bind(this)}/>
+          <LoginForm navigate={this.navigate.bind(this)}
+            loginFunction = {this.props.loginFunction.bind(this)}
+            />
         </View>
 
         <TouchableHighlight onPress={this.navigateBack.bind(this)} style={styles.buttonContainer}>

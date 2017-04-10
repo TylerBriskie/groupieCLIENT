@@ -137,6 +137,7 @@ class SignupForm extends Component {
           let accessToken = res;
           this.storeToken(accessToken)
           console.log("res is: ", res)
+          this.props.loginFunction(true)
           this.props.navigate('myprofile')
       } else {
         let errors = res;

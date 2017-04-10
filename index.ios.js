@@ -23,6 +23,7 @@ export default class groupieCLIENT extends Component {
 
       this.state = {
           username: "",
+          loggedIn: false,
           genres: [],
           bio: '',
           addGenre: "",
@@ -50,16 +51,28 @@ export default class groupieCLIENT extends Component {
     this.setState({sortByGenre: value})
   }
 
+  userLoggedIn(boolean){
+    this.setState({loggedIn: boolean})
+    console.log("logging in / out: ", boolean)
+  }
+
 
   renderScene(route, navigator) {
     if (route.name == 'splash'){
-      return <Splash {...route.passProps} route={route} navigator={navigator} />
+      return <Splash {...route.passProps} route={route} navigator={navigator}
+          loggedIn = {this.state.loggedIn}
+          loginFunction = {this.userLoggedIn.bind(this)}
+        />
     }
     if (route.name == 'signup'){
-      return <Signup {...route.passProps} route={route} navigator={navigator} />
+      return <Signup {...route.passProps} route={route} navigator={navigator}
+        loginFunction = {this.userLoggedIn.bind(this)}
+        />
     }
     if (route.name == 'login'){
-      return <Login {...route.passProps} route={route} navigator={navigator} />
+      return <Login {...route.passProps} route={route} navigator={navigator}
+        loginFunction = {this.userLoggedIn.bind(this)}
+        />
     }
     if (route.name == 'browse'){
       return <Browse {...route.passProps}
@@ -78,6 +91,7 @@ export default class groupieCLIENT extends Component {
         setFilterDistance = {this.setDistanceFilter.bind(this)}
         instrumentSort={this.state.sortByInstrument}
         genreSort={this.state.sortByGenre}
+        loginFunction = {this.userLoggedIn.bind(this)}
         filterDistance = {this.state.filterDistance}
       />
     }

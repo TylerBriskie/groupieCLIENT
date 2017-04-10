@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 
 import ViewContainer from './ViewContainer'
+const ACCESS_TOKEN = 'access_token';
 
 class Splash extends Component {
 
@@ -19,8 +20,22 @@ class Splash extends Component {
     super(props);
 
     this.state = {
-      logged_in: false,
+      loggedIn: this.props.loggedIn,
       loggin_button_text: "Login"
+    }
+  }
+
+  async getToken(){
+    try {
+      let token = await AsyncStorage.getItem(ACCESS_TOKEN);
+      console.log("Token Is: ", token);
+      if (token) {
+        return true
+      } else {
+        return false
+      }
+    } catch(error) {
+      console.log("Error: " + error)
     }
   }
 
@@ -34,6 +49,15 @@ class Splash extends Component {
 
   }
 
+  async componentWillMount(){
+    let loggedIn = await this.getToken()
+    console.log("logged in?", loggedIn)
+    if (loggedIn) {
+      console.log("yes")
+      this.props.loginFunction(true)
+    }
+  }
+
   render() {
     return (
       <ViewContainer>
@@ -44,7 +68,18 @@ class Splash extends Component {
           <Image style={styles.image}
             source={require("../../assets/GroupieLogo.png")}
           />
-        <TouchableHighlight onPress={this.navigate.bind(this, 'login')} style={styles.button}>
+        {this.props.loggedIn? <View>
+          <TouchableHighlight onPress={this.navigate.bind(this, 'browse')} style={styles.button}>
+            <Text>Browse Profiles</Text>
+          </TouchableHighlight>
+          <TouchableHighlight onPress={this.navigate.bind(this, 'myprofile')} style={styles.button}>
+            <Text>My Profile</Text>
+          </TouchableHighlight>
+          <TouchableHighlight onPress={this.navigate.bind(this, 'myconnections')} style={styles.button}>
+            <Text>My Connections</Text>
+          </TouchableHighlight>
+        </View> : <View>
+          <TouchableHighlight onPress={this.navigate.bind(this, 'login')} style={styles.button}>
           <Text>{this.state.loggin_button_text}</Text>
         </TouchableHighlight>
         <TouchableHighlight onPress={this.navigate.bind(this, 'signup')} style={styles.button}>
@@ -53,9 +88,9 @@ class Splash extends Component {
         <TouchableHighlight onPress={this.navigate.bind(this, 'browse')} style={styles.button}>
           <Text>Just Browsing...</Text>
         </TouchableHighlight>
-        <TouchableHighlight onPress={this.navigate.bind(this, 'myprofile')} style={styles.button}>
-          <Text>My Profile</Text>
-        </TouchableHighlight>
+          </View>}
+
+
 
       </ViewContainer>
     )

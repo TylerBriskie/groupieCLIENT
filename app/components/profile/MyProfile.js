@@ -82,6 +82,7 @@ class MyProfile extends Component {
     async removeToken(){
       try {
         await AsyncStorage.removeItem(ACCESS_TOKEN);
+        this.props.loginFunction(false)
         this.navigate('splash');
       } catch(error) {
         console.log("Something went wrong...")
