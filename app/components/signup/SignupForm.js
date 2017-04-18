@@ -39,7 +39,6 @@ class SignupForm extends Component {
       const newState = {};
       newState[key] = value;
       this.setState(newState);
-      this.updateInstrument()
     };
 
     componentDidMount(){

@@ -58,7 +58,7 @@ class Browse extends Component {
   }
 
   navigateBack(){
-    this.props.navigator.pop();
+    this.props.navigator.popToTop();
   }
 
   async navigate(routeName) {
@@ -222,7 +222,7 @@ class Browse extends Component {
       <View style={styles.browse}>
         <StatusBarBackground />
 
-          <TouchableHighlight onPress={this.navigate.bind(this, 'splash')}>
+          <TouchableHighlight onPress={this.navigateBack.bind(this)}>
             <Image
               style={styles.backArrow}
               source={require('../../../assets/left_arrow.png')}

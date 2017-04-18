@@ -154,6 +154,11 @@ class MyProfile extends Component {
     }
 
     async updateGenres(){
+      if (this.state.addGenre.length < 1){
+        Alert.alert('Can\'t Add empty Genre')
+      } else {
+
+
       try {
         let token = await AsyncStorage.getItem(ACCESS_TOKEN)
         let result = fetch('http://localhost:3000/myprofile/addGenre', {
@@ -183,6 +188,7 @@ class MyProfile extends Component {
       }catch (error){
         console.log("Error:", error)
       }
+    }
     }
 
     async updateInstrument(){
@@ -303,7 +309,7 @@ class MyProfile extends Component {
     }
 
     navigateBack() {
-        this.props.navigator.pop();
+        this.props.navigator.popToTop();
     }
 
     async getUserInfo() {
@@ -378,7 +384,6 @@ class MyProfile extends Component {
         newState[key] = value;
         this.setState(newState);
         this.updateInstrument()
-        console.log("Sorting By Instrument?: ", this.state.sortByInstrument)
       };
 
     remove(array, element) {
@@ -402,7 +407,7 @@ class MyProfile extends Component {
         return (
           <View style={styles.container}>
             <ScrollView>
-              <TouchableHighlight onPress={this.navigate.bind(this, 'splash')}>
+              <TouchableHighlight onPress={this.navigateBack.bind(this)}>
                 <Image
                   style={styles.backArrow}
                   source={require('../../../assets/left_arrow.png')}
@@ -441,6 +446,39 @@ class MyProfile extends Component {
                 style={styles.lineBreak}
                 source={require('../../../assets/white_line.png')}
               />
+
+              <View style={styles.row}>
+                <Text style={styles.h3}>My Instrument: </Text>
+              </View>
+
+              <View style={styles.center}>
+                <Picker
+                    style={styles.picker}
+                    itemStyle = {{color:'white'}}
+                    selectedValue={this.state.instrument}
+                    onValueChange={this.onValueChange.bind(this, 'instrument')}>
+                    <Item label="Guitar" value="Guitar" />
+                    <Item label="Bass" value="Bass" />
+                    <Item label="Drums" value="Drums" />
+                    <Item label="Percussion" value="Percussion" />
+                    <Item label="Keyboards" value="Keyboards" />
+                    <Item label="Horn" value="Horn" />
+                    <Item label="Banjo" value="Banjo" />
+                    <Item label="Mandolin" value="Mandolin" />
+                    <Item label="Violin" value="Violin" />
+                    <Item label="Singer" value="Singer" />
+                    <Item label="Rapper" value="Rapper" />
+                    <Item label="Other" value="Other" />
+
+
+                  </Picker>
+              </View>
+
+              <Image
+                style={styles.lineBreak}
+                source={require('../../../assets/white_line.png')}
+              />
+
               <View style={styles.row}>
                 <Text style={styles.h3}>Filter results by Genre?</Text>
                 <Switch
@@ -464,50 +502,18 @@ class MyProfile extends Component {
                   clearTextOnFocus = {true}
                   placeholder="Enter new genres, separated by commas"
                   value={this.state.addGenre} />
-
-                <TouchableHighlight onPress={this.updateGenres.bind(this)} style={styles.buttonContainer}>
-                    <Text style={styles.buttonText}>Add Genre</Text>
-                </TouchableHighlight>
-                <TouchableHighlight onPress={this.removeGenre.bind(this)} style={styles.backButton}>
-                    <Text style={styles.buttonText}>Clear My Genres</Text>
-                </TouchableHighlight>
-
-                <Image
-                  style={styles.lineBreak}
-                  source={require('../../../assets/white_line.png')}
-                />
-
-                <View style={styles.row}>
-                  <Text style={styles.h3}>My Instrument: </Text>
-                </View>
-
-                <View style={styles.center}>
-                  <Picker
-                      style={styles.picker}
-                      itemStyle = {{color:'white'}}
-                      selectedValue={this.state.instrument}
-                      onValueChange={this.onValueChange.bind(this, 'instrument')}>
-                      <Item label="Guitar" value="Guitar" />
-                      <Item label="Bass" value="Bass" />
-                      <Item label="Drums" value="Drums" />
-                      <Item label="Percussion" value="Percussion" />
-                      <Item label="Keyboards" value="Keyboards" />
-                      <Item label="Horn" value="Horn" />
-                      <Item label="Banjo" value="Banjo" />
-                      <Item label="Mandolin" value="Mandolin" />
-                      <Item label="Violin" value="Violin" />
-                      <Item label="Singer" value="Singer" />
-                      <Item label="Rapper" value="Rapper" />
-                      <Item label="Other" value="Other" />
-
-
-                    </Picker>
-                </View>
+                  <TouchableHighlight onPress={this.updateGenres.bind(this)} style={styles.buttonContainer}>
+                      <Text style={styles.buttonText}>Add Genre</Text>
+                  </TouchableHighlight>
+                  <TouchableHighlight onPress={this.removeGenre.bind(this)} style={styles.backButton}>
+                      <Text style={styles.buttonText}>Clear My Genres</Text>
+                  </TouchableHighlight>
 
                 <Image
                   style={styles.lineBreak}
                   source={require('../../../assets/white_line.png')}
                 />
+
 
                 <View style={styles.row}>
                   <Text style={styles.h3}>Filter results by Instrument?</Text>
@@ -750,6 +756,11 @@ const styles = StyleSheet.create({
       justifyContent: 'space-between',
       alignItems: 'center'
     },
+    // fullRow: {
+    //   flexDirection: 'row',
+    //   justifyContent: 'center',
+    //   alignItems: 'center',
+    // },
     h1: {
       fontSize: 24,
       color:"white",
@@ -791,7 +802,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         marginTop: 15,
         marginBottom: 15,
-        height: 40
+        height: 40,
     },
     backButton:{
       backgroundColor: 'rgba(255,155,0,1)',

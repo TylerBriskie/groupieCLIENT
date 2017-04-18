@@ -12,6 +12,10 @@ import MyProfile from './app/components/profile/MyProfile'
 import ProfileForm from './app/components/profile/ProfileForm'
 import Browse from './app/components/browse/Browse'
 import GeolocationExample from './app/components/Location'
+
+import Connections from './app/components/connections/Connections'
+
+
 // import BrowseNoLogin from './app/components/browse/BrowseNoLogin'
 
 
@@ -39,12 +43,10 @@ export default class groupieCLIENT extends Component {
 
   setDistanceFilter(value){
     this.setState({filterDistance: value})
-    console.log("Setting Distance filter to: ", this.state.filterDistance)
   }
 
   filterInstrumentsToggle(value){
     this.setState({sortByInstrument: value})
-    console.log("State of Instrument Filter: ", this.state.sortByInstrument)
   }
 
   filterGenreToggle(value){
@@ -53,7 +55,6 @@ export default class groupieCLIENT extends Component {
 
   userLoggedIn(boolean){
     this.setState({loggedIn: boolean})
-    console.log("logging in / out: ", boolean)
   }
 
 
@@ -63,6 +64,12 @@ export default class groupieCLIENT extends Component {
           loggedIn = {this.state.loggedIn}
           loginFunction = {this.userLoggedIn.bind(this)}
         />
+    }
+    if (route.name == 'myconnections'){
+      return <Connections {...route.passProps} route={route} navigator={navigator}
+
+        />
+
     }
     if (route.name == 'signup'){
       return <Signup {...route.passProps} route={route} navigator={navigator}

@@ -37,7 +37,7 @@ class Signup extends Component {
   }
 
   navigateBack(){
-    this.props.navigator.pop();
+    this.props.navigator.popToTop();
   }
 
   async onRegisterPressed(){
