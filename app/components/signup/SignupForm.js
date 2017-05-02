@@ -210,8 +210,6 @@ class SignupForm extends Component {
               (this.state.errors.length>0) ?
               null :
               <View style={styles.center}>
-                <Text style={styles.title}>Initial position: {this.state.userLat}</Text>
-
                 <Text style={{color: "#FFF", fontSize: 20}}>
                   Choose Your Instrument:
                 </Text>
